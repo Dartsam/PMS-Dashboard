@@ -63,17 +63,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'django_admin_flexlist',
+
     
     # rest_framework, cors_headers, flexlist and other apps installed end here
 
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'django_admin_flexlist'
 ]
 
 MIDDLEWARE = [
@@ -195,9 +188,3 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ]
-}
