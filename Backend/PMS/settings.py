@@ -31,6 +31,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # defaults
+    # 'django.contrib.admin',
+    'django_admin_flexlist.FlexListAdminConfig',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    # defaults ends
+
+    # PMS pps included
     'nom_roll.apps.NomRollConfig',
     'prom_eligibility.apps.PromEligibilityConfig',
     'promotion.apps.PromotionConfig',
@@ -45,15 +56,26 @@ INSTALLED_APPS = [
     'tasks.apps.TasksConfig',
     'analytics.apps.AnalyticsConfig',
     'performance.apps.PerformanceConfig',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # PMS pps included ends
+
+    # rest_framework, cors_headers, flexlist and other apps installed from this point
+    'rest_framework',
+    'corsheaders',
+    'django_admin_flexlist',
+    
+    # rest_framework, cors_headers, flexlist and other apps installed end here
+
 ]
 
 MIDDLEWARE = [
+
+    #place middlewares that should appear higher than the default middlewares
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
+    #place middlewares that should appear higher than the default middlewares end here
+
+    # Default middlewares
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -61,6 +83,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Default middlewares end here
+    
 ]
 
 ROOT_URLCONF = 'PMS.urls'
@@ -111,6 +136,32 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        # Add JWT later if needed
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # React dev server
+    'http://127.0.0.1:3000',
+    "https://example.com",
+    "https://sub.example.com",
+    "http://localhost:8080",
+    "http://127.0.0.1:9000",
+]
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Internationalization
