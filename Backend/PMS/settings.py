@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'tasks.apps.TasksConfig',
     'analytics.apps.AnalyticsConfig',
     'performance.apps.PerformanceConfig',
+
     # PMS pps included ends
 
     # rest_framework, cors_headers, flexlist and other apps installed from this point
@@ -65,6 +66,14 @@ INSTALLED_APPS = [
     
     # rest_framework, cors_headers, flexlist and other apps installed end here
 
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'django_admin_flexlist'
 ]
 
 MIDDLEWARE = [
@@ -185,3 +194,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
