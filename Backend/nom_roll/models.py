@@ -51,23 +51,41 @@ class Employee(models.Model):
     ]
 
     file_number = models.OneToOneField(
-        Personal, on_delete=models.CASCADE, primary_key=True, related_name='employee_by_file'
+                    Personal, on_delete=models.CASCADE, 
+                    primary_key=True,
+                    related_name='employee_by_file'
     )
     designation = models.CharField(max_length=30)
-    employment_type = models.CharField(max_length=10, choices=EMPLOYEE_TYPE_CHOICES, default='permanent')
-    conhess = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(15)])
-    step = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(15)])
+    employment_type = models.CharField(max_length=10, 
+                        choices=EMPLOYEE_TYPE_CHOICES, 
+                        default='permanent'
+    )
+    salary_structure = models.CharField(max_length=10, choices=[
+                        ('CONHESS', 'CONHESS'),
+                        ('CONMESS', 'CONMESS'), 
+                        ('CONTOPSAL', 'CONTOPSAL')], 
+                        default='CONHESS'
+    )
+    grade_level = models.IntegerField(validators=[MinValueValidator(1), 
+                                                  MaxValueValidator(15)])
+    step = models.IntegerField(validators=[MinValueValidator(1), 
+                                           MaxValueValidator(15)])
     dofa = models.DateField()
     dolp = models.DateField(null=True, blank=True)
     edor = models.DateField()
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, 
+                              default='active'
+    )
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     office_email = models.EmailField(unique=True)
     mobile_number = models.OneToOneField(
-        Personal, on_delete=models.CASCADE, unique=True, related_name='employee_by_mobile'
+        Personal, on_delete=models.CASCADE, unique=True, 
+        related_name='employee_by_mobile'
     )
 
     def __str__(self):
-        return f"{self.file_number} - {self.designation} - {self.department.name} - {self.status}"
+        return (f"{self.file_number} - {self.designation} - "
+        f"{self.department.name} - {self.status}"
+        )
 
 # employee model ends here

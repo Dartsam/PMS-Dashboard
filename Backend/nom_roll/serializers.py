@@ -9,8 +9,7 @@ from .models import Personal, Employee, Department
 class PersonalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Personal
-        fields = ('user', 'first_name', 'last_name', 'email', 'mobile_number',
-        'home_address', 'gender', 'date_of_birth', 'updated_at')
+        fields = '__all__'
 # PersonalSerializer ends here
 
 # EmployeeSerializer is used to serialize the Employee model. It begins here
@@ -18,9 +17,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
     personal = PersonalSerializer(source='file_number', read_only=True)
     class Meta:
         model = Employee
-        fields = ('file_number', 'designation', 'conhess', 'employment_type', 
-                  'step', 'dofa', 'dolp', 'edor', 'status', 'department', 
-                  'office_email', 'personal', 'mobile_number')
+        fields = '__all__'
 # EmployeeSerializer ends here
 
 # DepartmentSerializer is used to serialize the Department model. It begins 
@@ -28,5 +25,5 @@ class EmployeeSerializer(serializers.ModelSerializer):
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
-        fields = ('name', 'id')
+        fields = '__all__'
 # DepartmentSerializer ends here
