@@ -32,7 +32,11 @@ class PromotionEligibility(models.Model):
 
 
 class PromotionExercise(models.Model):
-    file_number = models.ForeignKey(Employee, to_field='file_number', on_delete=models.CASCADE)
+    file_number = models.ForeignKey(
+        Employee,
+        to_field='file_number',
+        on_delete=models.CASCADE
+    )
     aper_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
     civil_service_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
     area_of_specialization_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
@@ -50,4 +54,4 @@ class PromotionExercise(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"File Number {self.file_number} - Total Score: {self.total_score} - Promoted: {self.isPromoted}"
+        return f"File Number {self.file_number}"

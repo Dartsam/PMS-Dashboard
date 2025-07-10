@@ -21,8 +21,11 @@ class PromotionEligibilitySerializer(serializers.ModelSerializer):
 
 
 class PromotionExerciseSerializer(serializers.ModelSerializer):
-    file_number = serializers.StringRelatedField()
-    
+    file_number = serializers.SlugRelatedField(
+        slug_field='file_number',
+        queryset=Employee.objects.all()
+    )
+
     class Meta:
         model = PromotionExercise
         fields = '__all__'

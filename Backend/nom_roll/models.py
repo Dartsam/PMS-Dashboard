@@ -48,7 +48,7 @@ class Personal(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.email} - {self.user.get_full_name()}"
+        return f" {self.user.get_full_name()}"
 # personal model ends here
 
 # employee model begins here. file_number, designation, employment_type,
@@ -66,10 +66,8 @@ class Employee(models.Model):
         ('temporary', 'Temporary'),
     ]
 
-    file_number = models.OneToOneField(
-                    Personal, on_delete=models.CASCADE, 
-                    primary_key=True,
-                    related_name='employee_by_file'
+    file_number = models.CharField(
+                    max_length=17, unique=True, primary_key = True
     )
     designation = models.CharField(max_length=30)
     employment_type = models.CharField(max_length=10, 
@@ -100,8 +98,7 @@ class Employee(models.Model):
     )
 
     def __str__(self):
-        return (f"{self.file_number} - {self.designation} - "
-        f"{self.department.name} - {self.status}"
+        return (f"{self.file_number} "
         )
 
 # employee model ends here
