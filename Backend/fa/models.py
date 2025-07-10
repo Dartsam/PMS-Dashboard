@@ -19,6 +19,7 @@ class Account(models.Model):
         return f"{self.file_number} - {self.account_number}"  
 # Account model ends here
 
+
 # Salary structure model begins here
 class SalaryStructure(models.Model):
     STRUCTURE_CHOICES = [
@@ -49,6 +50,7 @@ class SalaryStructure(models.Model):
         if self.salary_structure == 'CONHESS' and self.step > 15:
             raise ValidationError("CONHESS only allows step 1–15.")
 # Salary structure model ends here
+
 
 # StandardDeduction model begins here
 class StandardDeduction(models.Model):
@@ -108,6 +110,7 @@ class StandardDeduction(models.Model):
 
 # StandardDeduction model ends here
 
+
 # Pension model begins here
 class Pension(models.Model):
     pfa_name = models.CharField(max_length=30, unique=True)
@@ -118,11 +121,8 @@ class Pension(models.Model):
 
 # Pension model ends here
 
- 
+
 # Allowance model begins here
-
-
-
 class Allowance(models.Model):
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE)
 
@@ -203,6 +203,6 @@ class Allowance(models.Model):
             self.call_duty_allowance,
             self.specialist_allowance
         ])
-    
+  
 
     

@@ -19,10 +19,26 @@ class Department(models.Model):
 # home_address, gender, date_of_birth, updated_at
 class Personal(models.Model):
     GENDER_CHOICES = [('M', 'Male'), ('F', 'Female')]
-
+    STATE_CHOICES = [("Abia", "Abia"), ("Adamawa", "Adamawa"), 
+                    ("Akwa Ibom", "Akwa Ibom"), ("Anambra", "Anambra"),
+                    ("Bauchi", "Bauchi"), ("Bayelsa", "Bayelsa"), 
+                    ("Benue", "Benue"), ("Borno", "Borno"), 
+                    ("Cross River", "Cross River"), ("Delta", "Delta"),
+                    ("Ebonyi", "Ebonyi"), ("Edo", "Edo"), ("Ekiti", "Ekiti"), 
+                    ("Enugu", "Enugu"), ("FCT", "FCT"), ("Gombe", "Gombe"), 
+                    ("Imo", "Imo"), ("Jigawa", "Jigawa"), ("Kaduna", "Kaduna"), 
+                    ("Kano", "Kano"), ("Katsina", "Katsina"), ("Kebbi", "Kebbi"), 
+                    ("Kogi", "Kogi"), ("Kwara", "Kwara"), ("Lagos", "Lagos"), 
+                    ("Nasarawa", "Nasarawa"), ("Niger", "Niger"),
+                    ("Ogun", "Ogun"), ("Ondo", "Ondo"), ("Osun", "Osun"), 
+                    ("Oyo", "Oyo"), ("Plateau", "Plateau"), ("Rivers", "Rivers"),
+                    ("Sokoto", "Sokoto"), ("Taraba", "Taraba"), 
+                    ("Yobe", "Yobe"), ("Zamfara", "Zamfara"),
+    ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
+    state_of_origin = models.CharField(max_length=20, choices=STATE_CHOICES)
     email = models.EmailField(unique=True)
     mobile_number = models.CharField(max_length=15, unique=True, 
                                      primary_key=True)

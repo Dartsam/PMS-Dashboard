@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     'tasks.apps.TasksConfig',
     'analytics.apps.AnalyticsConfig',
     'performance.apps.PerformanceConfig',
-
     # PMS pps included ends
 
     # rest_framework, cors_headers, flexlist and other apps installed from this point

@@ -11,6 +11,7 @@ urlpatterns = [
     path('leave/', include('leave.urls')),
     path('promotion/', include('promotion.urls')),
     path('nhis/', include('nhis.urls')),
+    path('prom_eligibility/', include('prom_eligibility.urls')),
     # path('analytics/', include('analytics.urls')),
     # path('archives/', include('archives.urls')),
 ]
