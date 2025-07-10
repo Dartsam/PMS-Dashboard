@@ -13,6 +13,7 @@ urlpatterns = [
     path('promotion/', include('promotion.urls')),
     path('nhis/', include('nhis.urls')),
     path('prom_eligibility/', include('prom_eligibility.urls')),
+    path('q_and_disc/', include('q_and_disc.urls')),
     # path('analytics/', include('analytics.urls')),
     # path('archives/', include('archives.urls')),
 ]
