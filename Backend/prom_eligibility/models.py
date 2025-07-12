@@ -15,9 +15,6 @@ class Cadre(models.Model):
 
 # prom_eligibility/models.py
 
-from django.db import models
-from nom_roll.models import Employee
-
 class PromotionEligibility(models.Model):
     file_number = models.ForeignKey(Employee, on_delete=models.CASCADE)
     year = models.IntegerField()  # e.g. 2025
