@@ -16,6 +16,7 @@ urlpatterns = [
     path('q_and_disc/', include('q_and_disc.urls')),
     path('tasks/', include('tasks.urls')),
     path('nhf/', include('nhf.urls')),
+    path('qualifications/', include('qualifications.urls')),
     # path('analytics/', include('analytics.urls')),
     # path('archives/', include('archives.urls')),
 ]

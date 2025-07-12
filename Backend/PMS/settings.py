@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'fa.apps.FaConfig',
     'archives.apps.ArchivesConfig',
     'tasks.apps.TasksConfig',
-    'analytics.apps.AnalyticsConfig',
+    'analytics.apps.AnalyticsConfig',  
     'performance.apps.PerformanceConfig',
     # PMS pps included ends
 
