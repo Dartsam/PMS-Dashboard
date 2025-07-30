@@ -6,7 +6,6 @@ import './App.css'
 const queryClient = new QueryClient();
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
@@ -14,7 +13,7 @@ function App() {
         <AppRouter />
       </QueryClientProvider>
     </>
-  )
+    )
 }
 
 export default App
