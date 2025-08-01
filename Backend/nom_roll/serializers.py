@@ -14,7 +14,7 @@ class PersonalSerializer(serializers.ModelSerializer):
 
 # EmployeeSerializer is used to serialize the Employee model. It begins here
 class EmployeeSerializer(serializers.ModelSerializer):
-    personal = PersonalSerializer(source='file_number', read_only=True)
+    personal = PersonalSerializer(source='mobile_number', read_only=True)
     class Meta:
         model = Employee
         fields = '__all__'
