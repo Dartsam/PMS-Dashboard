@@ -19,5 +19,5 @@ urlpatterns = [
     path('qualifications/', include('qualifications.urls')),
     path('pers_budget/', include('pers_budget.urls')),
     # path('analytics/', include('analytics.urls')),
-    # path('archives/', include('archives.urls')),
+    path('archives/', include('archives.urls')),
 ]
