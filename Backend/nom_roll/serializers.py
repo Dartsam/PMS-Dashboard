@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Personal, Employee, Department
+from .models import Personal, Employee, Department, TopManagement
 
 #  serializers play a crucial role in converting complex data 
 # (like Django model instances) to native Python datatypes that can then be 
@@ -14,7 +14,7 @@ class PersonalSerializer(serializers.ModelSerializer):
 
 # EmployeeSerializer is used to serialize the Employee model. It begins here
 class EmployeeSerializer(serializers.ModelSerializer):
-    personal = PersonalSerializer(source='file_number', read_only=True)
+    personal = PersonalSerializer(source='mobile_number', read_only=True)
     class Meta:
         model = Employee
         fields = '__all__'
@@ -27,3 +27,8 @@ class DepartmentSerializer(serializers.ModelSerializer):
         model = Department
         fields = '__all__'
 # DepartmentSerializer ends here
+
+class TopManagementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TopManagement
+        fields = '__all__'

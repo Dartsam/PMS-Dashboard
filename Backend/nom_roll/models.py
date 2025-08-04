@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
-# Create your models here.
+import os 
+from django.conf import settings
+from PIL import Image
 
 User = get_user_model()
 # department model begins here. name and id were the attributes so
@@ -96,9 +98,42 @@ class Employee(models.Model):
         Personal, on_delete=models.CASCADE, unique=True, 
         related_name='employee_by_mobile'
     )
+    isHOD = models.BooleanField(default=False)
+    signature =  models.ImageField(
+        upload_to='signature/',
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return (f"{self.file_number} "
         )
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.signature and self.signature.name:
+            image_path = os.path.join(settings.MEDIA_ROOT, self.signature.name)
+            if os.path.exists(image_path):
+                try:
+                    img = Image.open(image_path)
+                except (FileNotFoundError, OSError) as e:
+                    return
+                if img.height > 300 or img.width > 300:
+                    output_size = (300, 300)
+                    img.thumbnail(output_size)
+                    img.save(image_path)
+            else:
+                pass
 
+
+class TopManagement(models.Model):
+    name = models.CharField(max_length=50)
+    position = models.CharField(max_length=20)
+    qualifications = models.CharField(max_length=50)
+    email = models.EmailField()
+    mobile_number = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.position
+
+    
 # employee model ends here

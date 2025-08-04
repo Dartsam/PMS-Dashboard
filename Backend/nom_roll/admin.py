@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Personal, Employee, Department
+from .models import Personal, Employee, Department, TopManagement
 from django_admin_flexlist import FlexListAdmin
 # Register your models here.
 
@@ -30,3 +30,7 @@ class EmployeeAdmin(FlexListAdmin):
 class DepartmentAdmin(FlexListAdmin):
     list_display = ['name', 'id']
 # DepartmentAdmin registered with the admin site
+
+@admin.register(TopManagement)
+class TopManagementAdmin(FlexListAdmin):
+    list_display = ['name', 'position', 'qualifications', 'email', 'mobile_number']
