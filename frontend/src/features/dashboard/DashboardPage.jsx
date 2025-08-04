@@ -1,7 +1,6 @@
-import { Grid, Card, CardContent, Typography, Box, Button } from '@mui/material';
+import { Grid, Card, CardContent, Typography, Box } from '@mui/material';
 
 export default function DashboardPage() {
-  // replace these with real React Query hooks later
   const dummyStats = [
     { title: 'Staff Count', value: '1,234', change: '+4.2%' },
     { title: 'Leave Pending', value: '56', change: '-1.3%' },
@@ -10,21 +9,33 @@ export default function DashboardPage() {
   ];
 
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom>
+    <Box sx={{ p: 3, bgcolor: '#F9FAFB', minHeight: '100vh' }}>
+      <Typography variant="h5" fontWeight="bold" mb={3} sx={{ textAlign: 'left' }}>
         Overview
       </Typography>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
+        {/* First 4 cards */}
         {dummyStats.map(({ title, value, change }) => (
-          <Grid item xs={12} sm={6} md={3} key={title}>
-            <Card sx={{ bgcolor: '#1E1E1E' }}>
+          <Grid item xs={12} sm={6} md={6} lg={3} key={title}>
+            <Card
+              sx={{
+                backgroundColor: '#fff',
+                borderRadius: 2,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+              }}
+            >
               <CardContent>
-                <Typography color="text.secondary" gutterBottom>
+                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                   {title}
                 </Typography>
-                <Typography variant="h5">{value}</Typography>
-                <Typography color={change.startsWith('+') ? 'success.main' : 'error.main'}>
+                <Typography variant="h5" fontWeight="bold">
+                  {value}
+                </Typography>
+                <Typography
+                  variant="subtitle2"
+                  color={change.startsWith('+') ? 'success.main' : 'error.main'}
+                >
                   {change}
                 </Typography>
               </CardContent>
@@ -32,23 +43,40 @@ export default function DashboardPage() {
           </Grid>
         ))}
 
-        {/* Example larger chart card */}
-        <Grid item xs={12} md={8}>
-          <Card sx={{ bgcolor: '#1E1E1E', height: 300 }}>
+        {/* Sessions Card */}
+        <Grid item xs={12} sm={12} md={12} lg={8}>
+          <Card
+            sx={{
+              backgroundColor: '#fff',
+              borderRadius: 2,
+              height: 300,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+            }}
+          >
             <CardContent>
-              <Typography variant="h6">Sessions Last 30 Days</Typography>
-              {/* Replace with your chart component */}
-              <Box sx={{ mt: 2, height: '220px', bgcolor: '#2A2A2A' }} />
+              <Typography variant="subtitle1" fontWeight="bold">
+                Sessions Last 30 Days
+              </Typography>
+              <Box sx={{ mt: 2, height: '220px', bgcolor: '#E5E7EB', borderRadius: 1 }} />
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={4}>
-          <Card sx={{ bgcolor: '#1E1E1E', height: 300 }}>
+        {/* Page Views Card */}
+        <Grid item xs={12} sm={12} md={12} lg={4}>
+          <Card
+            sx={{
+              backgroundColor: '#fff',
+              borderRadius: 2,
+              height: 300,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+            }}
+          >
             <CardContent>
-              <Typography variant="h6">Page Views</Typography>
-              {/* Replace with chart */}
-              <Box sx={{ mt: 2, height: '220px', bgcolor: '#2A2A2A' }} />
+              <Typography variant="subtitle1" fontWeight="bold">
+                Page Views
+              </Typography>
+              <Box sx={{ mt: 2, height: '220px', bgcolor: '#E5E7EB', borderRadius: 1 }} />
             </CardContent>
           </Card>
         </Grid>

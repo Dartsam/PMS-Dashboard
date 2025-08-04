@@ -16,6 +16,10 @@ import {
 import {
   Dashboard as DashboardIcon,
   People as PeopleIcon,
+  Person as PersonIcon,
+  Rocket as RocketIcon,
+  Assignment as AssignmentIcon,
+  AccountBalance as AccountBalanceIcon,
   EventNote as EventNoteIcon,
   AccountBalanceWallet as WalletIcon,
   ChevronLeft as ChevronLeftIcon,
@@ -42,9 +46,13 @@ export default function AppLayout() {
 
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-    { text: 'Nominal Roll', icon: <PeopleIcon />, path: '/staff/nominal-roll' },
-    { text: 'Leave Roster', icon: <EventNoteIcon />, path: '/leave' },
+    { text: 'Employee', icon: <PeopleIcon />, path: '/employee/nominal-roll' },
+    { text: 'Career Advancement', icon: <RocketIcon />, path: '/employee/nominal-roll' },
+    { text: 'Fiscal', icon: <AccountBalanceIcon />, path: '/employee/nominal-roll' },
+    { text: 'Tasks', icon: <AssignmentIcon />, path: '/employee/nominal-roll' },
+    { text: 'Leave', icon: <EventNoteIcon />, path: '/leave' },
     { text: 'Budget', icon: <WalletIcon />, path: '/budget' },
+    { text: 'Profile', icon: <PersonIcon />, path: '/employee/nominal-roll' },
   
   ];
 
