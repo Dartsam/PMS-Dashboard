@@ -1,14 +1,4 @@
-// import { useQuery } from '@tanstack/react-query';
-// import { http } from '@/api/http';
-
-// export function useNominalRoll() {
-//   return useQuery({
-//     queryKey: ['staff'],
-//     queryFn: () => http.get('/staff/').then((r) => r.data),
-//   });
-// }
-
-import { useEffect, useState } from 'react';
+git addimport { useEffect, useState } from 'react';
 import axios from 'axios';
 
 export const useNominalRoll = () => {
@@ -19,7 +9,7 @@ export const useNominalRoll = () => {
   useEffect(() => {
     const fetchNominalRoll = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/nominal-roll/');
+        const response = await axios.get('http://localhost:8000/api/nom_roll/employee');
         setData(response.data);
       } catch (err) {
         setError(err);
