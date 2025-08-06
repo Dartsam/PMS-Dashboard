@@ -3,7 +3,7 @@ import LoginPage from '../auth/LoginPage';
 import AppLayout from '@/layouts/AppLayout';
 import DashboardPage from '@/features/dashboard/DashboardPage';
 import NominalRoll from '@/features/employee/nominalRoll/NominalRoll';
-import EmployeeForm from '../features/employee/newEmployee/EmployeeForm';
+import EmployeeForm from '@/features/employee/newEmployee/EmployeeForm';
 
 function AppRouter() {
   return (

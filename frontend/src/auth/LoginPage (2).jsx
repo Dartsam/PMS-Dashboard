@@ -1,5 +1,6 @@
 import {Box,Button,Container,TextField,Typography,Link,Paper,} from '@mui/material';
 import { useState } from 'react';
+import axios from 'axios';
 
 export default function LoginPage() {
   const [form, setForm] = useState({
@@ -13,7 +14,7 @@ export default function LoginPage() {
   };
 
   const handleLogin = async () => {
-  const res = await axios.post('/token/', { username, password });
+  const res = await axios.post('/token/', { username: form.email, password: form.password, });
   useAuthStore.getState().setToken(res.data.access);
 };
 

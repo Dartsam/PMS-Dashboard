@@ -14,8 +14,6 @@ import {
   Paper,
   Collapse,
   Avatar,
-  ExpandLess,
-  ExpandMore,
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
@@ -29,9 +27,11 @@ import {
   Menu as MenuIcon,
   Search as SearchIcon,
   Notifications as NotificationsIcon,
+  ExpandLess as ExpandLessIcon,
+  ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material';
 import Logo from '@/assets/fnph.png';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 const drawerWidth = 240;
@@ -40,7 +40,7 @@ export default function AppLayout() {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [openSubMenu, setOpenSubMenu] = useState(null); // for submenu toggle
+  const [openSubMenu, setOpenSubMenu] = useState(null);
 
   const today = useMemo(
     () =>
@@ -53,65 +53,71 @@ export default function AppLayout() {
     []
   );
 
-  // Temporary static profile (you should later fetch this from global state or backend)
   const profile = {
     image: '',
     name: 'John Doe',
     position: 'HR Manager',
   };
-  
 
   const menuItems = [
-  {
-    label: 'Dashboard',
-    icon: <DashboardIcon />,
-    path: '/dashboard',
-  },
-  {
-    label: 'Employee',
-    icon: <PeopleIcon />,
-    children: [
-      {
-        label: 'Nominal Roll',
-        path: '/employee/nominalRoll',
-      },
-      {
-        label: 'New Employee',
-        path: '/employee/newEmployee',
-      },
-      {
-        label: 'Archive',
-        path: '/employee/archive',
-      },
-    ],
-  },
-  {
-    label: 'Career Advancement',
-    icon: <RocketIcon />,
-    path: '/career',
-  },
-  {
-    label: 'Fiscal',
-    icon: <AccountBalanceIcon />,
-    path: '/fiscal',
-  },
-  {
-    label: 'Tasks',
-    icon: <AssignmentIcon />,
-    path: '/tasks',
-  },
-  {
-    label: 'Leave',
-    icon: <EventNoteIcon />,
-    path: '/leave',
-  },
-  {
-    label: 'Budget',
-    icon: <WalletIcon />,
-    path: '/budget',
-  },
-];
+    {
+      label: 'Dashboard',
+      icon: <DashboardIcon />,
+      path: '/dashboard',
+    },
+    {
+      label: 'Employee',
+      icon: <PeopleIcon />,
+      children: [
+        {
+          label: 'Nominal Roll',
+          path: '/employee/nominalRoll',
+        },
+        {
+          label: 'New Employee',
+          path: '/employee/newEmployee',
+        },
+        {
+          label: 'Archive',
+          path: '/employee/archive',
+        },
+      ],
+    },
+    {
+      label: 'Career Advancement',
+      icon: <RocketIcon />,
+      path: '/career',
+    },
+    {
+      label: 'Fiscal',
+      icon: <AccountBalanceIcon />,
+      path: '/fiscal',
+    },
+    {
+      label: 'Tasks',
+      icon: <AssignmentIcon />,
+      path: '/tasks',
+    },
+    {
+      label: 'Leave',
+      icon: <EventNoteIcon />,
+      path: '/leave',
+    },
+    {
+      label: 'Budget',
+      icon: <WalletIcon />,
+      path: '/budget',
+    },
+  ];
 
+  useEffect(() => {
+    const parent = menuItems.find((item) =>
+      item.children?.some((child) => child.path === pathname)
+    );
+    if (parent) {
+      setOpenSubMenu(parent.label);
+    }
+  }, [pathname]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -193,15 +199,6 @@ export default function AppLayout() {
             const hasChildren = !!item.children;
             const isOpen = openSubMenu === item.label || item.children?.some((child) => child.path === pathname);
 
-            useEffect(() => {
-  const parent = menuItems.find((item) =>
-    item.children?.some((child) => child.path === pathname)
-  );
-  if (parent) {
-    setOpenSubMenu(parent.label);
-  }
-}, [pathname]);
-
             return (
               <Box key={index}>
                 <ListItemButton
@@ -221,7 +218,7 @@ export default function AppLayout() {
                   {open && (
                     <>
                       <ListItemText primary={item.label} />
-                      {hasChildren && (isOpen ? <ExpandLess /> : <ExpandMore />)}
+                      {hasChildren && (isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />)}
                     </>
                   )}
                 </ListItemButton>
@@ -247,8 +244,6 @@ export default function AppLayout() {
           })}
         </List>
 
-
-        {/* Profile Info at Bottom */}
         <Box sx={{ mt: 'auto', p: 2, borderTop: '1px solid #333', textAlign: open ? 'left' : 'center' }}>
           <Avatar
             src={profile.image || ''}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+git addimport { useEffect, useState } from 'react';
 import axios from 'axios';
 
 export const useNominalRoll = () => {
@@ -18,7 +18,7 @@ export const useNominalRoll = () => {
       }
     };
 
-    fetchNominalRoll();auth
+    fetchNominalRoll();
   }, []);
 
   return { data, isLoading, error };
