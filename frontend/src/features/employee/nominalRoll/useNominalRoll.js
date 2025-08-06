@@ -19,7 +19,7 @@ export const useNominalRoll = () => {
   useEffect(() => {
     const fetchNominalRoll = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/nominal-roll/');
+        const response = await axios.get('http://localhost:8000/api/nom_roll/employee');
         setData(response.data);
       } catch (err) {
         setError(err);

@@ -5,8 +5,8 @@ env/
 # Ignore Django migrations and pycache
 __pycache__/
 *.pyc
-migrations
-db.sqlite3
+# migrations
+# db.sqlite3
 Backend_backup
 
 
