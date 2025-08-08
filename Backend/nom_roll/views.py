@@ -2,7 +2,9 @@ from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 # from rest_framework.decorators import action
 from .models import Personal, Employee, Department, TopManagement
-from .serializers import PersonalSerializer, EmployeeSerializer, DepartmentSerializer, TopManagementSerializer
+from .serializers import (PersonalSerializer, EmployeeSerializer, 
+                          DepartmentSerializer, TopManagementSerializer, 
+                          NominalRollSerializer)
 
 class PersonalViewset(viewsets.ModelViewSet):
     queryset = Personal.objects.all()
@@ -27,3 +29,11 @@ class TopManagementViewset(viewsets.ModelViewSet):
     #     queryset = self.queryset
     #     serializer = self.serializer_class(queryset, many=True)
     #     return Response(serializer.data)
+
+class NominalRollViewset(viewsets.ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = NominalRollSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        return self.queryset.filter(status='active')

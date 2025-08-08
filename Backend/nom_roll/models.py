@@ -109,7 +109,18 @@ class Employee(models.Model):
         return (f"{self.file_number} "
         )
     def save(self, *args, **kwargs):
+        # Auto-compute edor before saving
+        dob = self.mobile_number.date_of_birth
+        if dob and self.dofa:
+            age_at_appointment = self.dofa.year - dob.year - (
+                (self.dofa.month, self.dofa.day) < (dob.month, dob.day)
+            )
+            if age_at_appointment < 25:
+                self.edor = self.dofa.replace(year=self.dofa.year + 35)
+            else:
+                self.edor = dob.replace(year=dob.year + 60)
         super().save(*args, **kwargs)
+        
         if self.signature and self.signature.name:
             image_path = os.path.join(settings.MEDIA_ROOT, self.signature.name)
             if os.path.exists(image_path):
