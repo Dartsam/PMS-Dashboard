@@ -4,4 +4,4 @@ from .models import Pension
 class PensionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pension
-        fields = ('pfa', 'pfa_no')
+        fields = '__all__'

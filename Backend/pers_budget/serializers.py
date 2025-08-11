@@ -11,11 +11,6 @@ class PersonnelBudgetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PersonnelBudget
-        fields = [
-            'id', 'employee_file_number', 'full_name', 'state_of_origin', 'ippis_no',
-            'dofa', 'dolp',
-            'new_designation', 'new_level', 'new_step', 'projected_annual_salary',
-            'year', 'created_at'
-        ]
+        fields ='__all__'
         read_only_fields = [
             'new_designation', 'new_level', 'new_step', 'projected_annual_salary', 'created_at']
