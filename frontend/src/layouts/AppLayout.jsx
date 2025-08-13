@@ -12,6 +12,7 @@ import {
   IconButton,
   InputBase,
   Paper,
+  Collapse,
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
@@ -26,8 +27,10 @@ import {
   Menu as MenuIcon,
   Search as SearchIcon,
   Notifications as NotificationsIcon,
+  ExpandLess,
+  ExpandMore,
 } from '@mui/icons-material';
-import Logo from '@/assets/fnph.png'
+import Logo from '@/assets/fnph.png';
 import { useState, useMemo } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
@@ -35,31 +38,52 @@ const drawerWidth = 240;
 
 export default function AppLayout() {
   const [open, setOpen] = useState(true);
+  const [openDropdown, setOpenDropdown] = useState(null); // track open menu
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-
   const today = useMemo(
-    () => new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
+    () =>
+      new Date().toLocaleDateString(undefined, {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      }),
     []
   );
 
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
     { text: 'Employee', icon: <PeopleIcon />, path: '/employee/nominal-roll' },
-    { text: 'Career Advancement', icon: <RocketIcon />, path: '/employee/nominal-roll' },
+    {
+      text: 'Career Advancement',
+      icon: <RocketIcon />,
+      children: [
+        { text: 'Promotion List', path: '/career-advancement/promotion-list' },
+        { text: 'Promotion Eligibility', path: '/career-advancement/promotion-eligibility' },
+        { text: 'Educational Qualification', path: '/career-advancement/educational-qualification' },
+        { text: 'Professional Qualification', path: '/career-advancement/professional-qualification' },
+      ],
+    },
     { text: 'Fiscal', icon: <AccountBalanceIcon />, path: '/employee/nominal-roll' },
     { text: 'Tasks', icon: <AssignmentIcon />, path: '/employee/nominal-roll' },
     { text: 'Leave', icon: <EventNoteIcon />, path: '/leave' },
     { text: 'Budget', icon: <WalletIcon />, path: '/budget' },
     { text: 'Profile', icon: <PersonIcon />, path: '/employee/nominal-roll' },
-  
   ];
+
+  const handleMenuClick = (item) => {
+    if (item.children) {
+      setOpenDropdown(openDropdown === item.text ? null : item.text);
+    } else {
+      navigate(item.path);
+    }
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-
       <AppBar
         position="fixed"
         sx={{
@@ -68,31 +92,16 @@ export default function AppLayout() {
         }}
       >
         <Toolbar>
-          {/* Sidebar toggle */}
-          <IconButton
-            color="inherit"
-            edge="start"
-            onClick={() => setOpen((o) => !o)}
-            sx={{ mr: 2 }}
-          >
+          <IconButton color="inherit" edge="start" onClick={() => setOpen((o) => !o)} sx={{ mr: 2 }}>
             {open ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
 
-          {/* App title */}
-          <Box
-              component="img"
-              src={Logo}
-              alt="My App Logo"
-              sx={{ height: 32, mr: 1 }}
-            />
+          <Box component="img" src={Logo} alt="My App Logo" sx={{ height: 32, mr: 1 }} />
           <Typography variant="h6" noWrap component="div">
             FNPHY
           </Typography>
 
-          {/* Spacer */}
           <Box sx={{ flexGrow: 1 }} />
-
-          {/* Search box */}
           <Paper
             component="form"
             sx={{
@@ -116,12 +125,8 @@ export default function AppLayout() {
             </IconButton>
           </Paper>
 
-          {/* Date */}
-          <Typography sx={{ mr: 3 }}>
-            {today}
-          </Typography>
+          <Typography sx={{ mr: 3 }}>{today}</Typography>
 
-          {/* Notifications */}
           <IconButton color="inherit">
             <NotificationsIcon />
           </IconButton>
@@ -144,21 +149,36 @@ export default function AppLayout() {
       >
         <Toolbar sx={{ justifyContent: open ? 'flex-end' : 'center' }} />
         <List>
-          {menuItems.map(({ text, icon, path }) => (
-            <ListItemButton
-              key={text}
-              selected={pathname === path}
-              onClick={() => navigate(path)}
-              sx={{
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon sx={{ color: '#FFF', minWidth: 0, mr: open ? 3 : 'auto' }}>
-                {icon}
-              </ListItemIcon>
-              {open && <ListItemText primary={text} />}
-            </ListItemButton>
+          {menuItems.map((item) => (
+            <Box key={item.text}>
+              <ListItemButton
+                onClick={() => handleMenuClick(item)}
+                sx={{ justifyContent: open ? 'initial' : 'center', px: 2.5 }}
+              >
+                <ListItemIcon sx={{ color: '#FFF', minWidth: 0, mr: open ? 3 : 'auto' }}>
+                  {item.icon}
+                </ListItemIcon>
+                {open && <ListItemText primary={item.text} />}
+                {item.children && open && (openDropdown === item.text ? <ExpandLess /> : <ExpandMore />)}
+              </ListItemButton>
+
+              {item.children && (
+                <Collapse in={openDropdown === item.text} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {item.children.map((child) => (
+                      <ListItemButton
+                        key={child.text}
+                        sx={{ pl: open ? 4 : 2 }}
+                        selected={pathname === child.path}
+                        onClick={() => navigate(child.path)}
+                      >
+                        <ListItemText primary={child.text} />
+                      </ListItemButton>
+                    ))}
+                  </List>
+                </Collapse>
+              )}
+            </Box>
           ))}
         </List>
       </Drawer>
@@ -171,11 +191,14 @@ export default function AppLayout() {
           p: 3,
           minHeight: '100vh',
         }}
+
       >
-        {/* push content below AppBar */}
+        {/* push content below AppBar*/}
+
         <Toolbar />
         <Outlet />
       </Box>
     </Box>
   );
 }
+
