@@ -8,6 +8,8 @@ __pycache__/
 # migrations
 # db.sqlite3
 Backend_backup
+backend/db.sqlite3
+
 
 
 # Ignore IDE/editor settings
