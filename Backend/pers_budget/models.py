@@ -1,13 +1,14 @@
 from django.db import models
-from nom_roll.models import Employee
 from django.core.validators import MinValueValidator, MaxValueValidator
 from fa.models import SalaryStructure
 from prom_eligibility.models import PromotionEligibility
+from nom_roll.models import User, Employee
 
 # Create your models here.
 
 class PersonnelBudget(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
     year = models.PositiveIntegerField()
 
     # computed fields

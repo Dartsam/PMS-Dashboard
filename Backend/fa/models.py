@@ -1,5 +1,5 @@
 from django.db import models
-from nom_roll.models import Personal, Employee
+from nom_roll.models import User, Employee
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
@@ -9,10 +9,12 @@ from decimal import Decimal
 # Account model begins here
 class Account(models.Model):
     account_number = models.CharField(max_length=20, unique=True)
-    file_number = models.OneToOneField(Employee, on_delete=models.CASCADE)
+    file_number = models.CharField(max_length=17, unique=True)
     paypoint = models.CharField(max_length=25)
     salary_structure = models.CharField(max_length=10)
-    pfa_no = models.ForeignKey('Pension', on_delete=models.CASCADE)
+    pfa_no = models.CharField(max_length=20)
+    user = models.ForeignKey(User, null=True, on_delete= models.CASCADE)
+    employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
     ippis_no = models.CharField(max_length=7, unique=True)
 
     def __str__(self):
@@ -133,7 +135,8 @@ class Pension(models.Model):
 
 # Allowance model begins here
 class Allowance(models.Model):
-    employee = models.OneToOneField(Employee, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
 
     # Allowance Rates (% of Annual Salary)
     hazard_rate = models.DecimalField(max_digits=5, decimal_places=2, default=10.0)

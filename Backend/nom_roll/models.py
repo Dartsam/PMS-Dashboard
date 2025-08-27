@@ -11,6 +11,7 @@ User = get_user_model()
 class Department(models.Model):
     name = models.CharField(max_length=100, unique=True)
     code = models.CharField(max_length=3, unique=True)  # was 'id'
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -37,13 +38,12 @@ class Personal(models.Model):
                     ("Sokoto", "Sokoto"), ("Taraba", "Taraba"), 
                     ("Yobe", "Yobe"), ("Zamfara", "Zamfara"),
     ]
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     state_of_origin = models.CharField(max_length=20, choices=STATE_CHOICES)
     email = models.EmailField(unique=True)
-    mobile_number = models.CharField(max_length=15, unique=True, 
-                                     primary_key=True)
+    mobile_number = models.CharField(max_length=15, unique=True)
     home_address = models.CharField(max_length=150)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     date_of_birth = models.DateField()
@@ -68,9 +68,7 @@ class Employee(models.Model):
         ('temporary', 'Temporary'),
     ]
 
-    file_number = models.CharField(
-                    max_length=17, unique=True, primary_key = True
-    )
+    file_number = models.CharField(max_length=17, unique=True)
     designation = models.CharField(max_length=30)
     employment_type = models.CharField(max_length=10, 
                         choices=EMPLOYEE_TYPE_CHOICES, 
@@ -92,12 +90,10 @@ class Employee(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, 
                               default='active'
     )
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    office_email = models.EmailField(unique=True)
-    mobile_number = models.OneToOneField(
-        Personal, on_delete=models.CASCADE, unique=True, 
-        related_name='employee_by_mobile'
-    )
+    department = models.CharField(max_length=20)
+    office_email = models.EmailField()
+    mobile_number = models.CharField(max_length=15)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     isHOD = models.BooleanField(default=False)
     signature =  models.ImageField(
         upload_to='signature/',
@@ -142,6 +138,7 @@ class TopManagement(models.Model):
     qualifications = models.CharField(max_length=50)
     email = models.EmailField()
     mobile_number = models.CharField(max_length=15)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.position

@@ -52,7 +52,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Employee',
             fields=[
-                ('file_number', models.CharField(max_length=17, primary_key=True, serialize=False, unique=True)),
+                ('file_number', models.CharField(max_length=17, serialize=False, unique=True)),
                 ('designation', models.CharField(max_length=30)),
                 ('employment_type', models.CharField(choices=[('permanent', 'Permanent'), ('temporary', 'Temporary')], default='permanent', max_length=10)),
                 ('salary_structure', models.CharField(choices=[('CONHESS', 'CONHESS'), ('CONMESS', 'CONMESS'), ('CONTOPSAL', 'CONTOPSAL')], default='CONHESS', max_length=10)),
@@ -65,8 +65,8 @@ class Migration(migrations.Migration):
                 ('office_email', models.EmailField(max_length=254, unique=True)),
                 ('isHOD', models.BooleanField(default=False)),
                 ('signature', models.ImageField(blank=True, null=True, upload_to='signature/')),
-                ('department', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='nom_roll.department')),
-                ('mobile_number', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='employee_by_mobile', to='nom_roll.personal')),
+                ('department', models.CharField(max_length=20)),
+                ('mobile_number', models.CharField(max_length=11)),
             ],
         ),
     ]

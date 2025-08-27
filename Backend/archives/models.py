@@ -1,8 +1,9 @@
 from django.db import models
-from fa.models import Account
+from nom_roll.models import User
 
 class Archive(models.Model):
-    ippis_no = models.ForeignKey(Account, on_delete=models.CASCADE)
+    ippis_no = models.CharField(max_length=7)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     reason = models.CharField(max_length=15)
     archived_at = models.DateTimeField(auto_now_add=True)
 
