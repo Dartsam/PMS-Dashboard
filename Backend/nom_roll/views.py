@@ -1,10 +1,15 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
 # from rest_framework.decorators import action
 from .models import Personal, Employee, Department, TopManagement
 from .serializers import (PersonalSerializer, EmployeeSerializer, 
                           DepartmentSerializer, TopManagementSerializer, 
-                          NominalRollSerializer)
+                          NominalRollSerializer, StaffCreateSerializer)
+
+class StaffCreateView(generics.CreateAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = StaffCreateSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 class PersonalViewset(viewsets.ModelViewSet):
     queryset = Personal.objects.all()

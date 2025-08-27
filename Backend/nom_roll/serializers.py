@@ -1,11 +1,12 @@
 from rest_framework import serializers
-from .models import Personal, Employee, Department, TopManagement
+from django.db import transaction
+from nom_roll.models import Personal, Employee, Department, TopManagement
 from datetime import date
-from fa.models import Account
+from fa.models import Account, Pension
+from qualifications.models import EducationalQualification, ProfessionalQualification
+from fa.serializers import AccountSerializer, PensionSerializer
+from qualifications.serializers import EducationalQualificationSerializer, ProfessionalQualificationSerializer
 
-#  serializers play a crucial role in converting complex data 
-# (like Django model instances) to native Python datatypes that can then be 
-# easily rendered into JSON, XML, or other content types — and vice versa.
 
 # PersonalSerializer is used to serialize the Personal model. It begins here
 class PersonalSerializer(serializers.ModelSerializer):
@@ -100,7 +101,65 @@ class NominalRollSerializer(serializers.ModelSerializer):
         )
 # NominalRollSerializer ends here 
 
+class StaffCreateSerializer(serializers.Serializer):
+    # Department
+    department = DepartmentSerializer()
 
+    # Personal
+    personal = PersonalSerializer()
+
+    # Employee
+    employee = EmployeeSerializer()
+
+    # Account
+    account = AccountSerializer()
+
+    # Qualifications
+    educations = EducationalQualificationSerializer(many=True, required=False)
+    qualifications = ProfessionalQualificationSerializer(many=True, required=False)
+
+    @transaction.atomic
+    def create(self, validated_data):
+        # Extract nested objects
+        department_data = validated_data.pop("department")
+        personal_data = validated_data.pop("personal")
+        employee_data = validated_data.pop("employee")
+        account_data = validated_data.pop("account")
+        educations_data = validated_data.pop("educations", [])
+        qualifications_data = validated_data.pop("qualifications", [])
+
+        # Department
+        department, _ = Department.objects.get_or_create(**department_data)
+
+        # Personal
+        personal = Personal.objects.create(**personal_data)
+
+        # Employee (attach Department + Personal)
+        employee = Employee.objects.create(
+            department=department,
+            mobile_number=personal,
+            **employee_data
+        )
+
+        # Account (attach Employee)
+        account = Account.objects.create(
+            file_number=employee,
+            **account_data
+        )
+
+        # Education
+        for edu in educations_data:
+            EducationalQualification.objects.create(**edu)
+
+        # Professional Qualifications
+        for qual in qualifications_data:
+            ProfessionalQualification.objects.create(**qual)
+
+        return employee
+
+#  serializers play a crucial role in converting complex data 
+# (like Django model instances) to native Python datatypes that can then be 
+# easily rendered into JSON, XML, or other content types — and vice versa.
 
 # from rest_framework import serializers
 # from .models import Personal, Employee, Department, TopManagement

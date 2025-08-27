@@ -96,10 +96,19 @@ class StandardDeduction(models.Model):
             self.nhf_amount,
             self.pension_amount
         ])
+    
+    @property
+    def net_allowance(self):
+        try:
+            emp = self.ippis_account.file_number  # Employee instance
+            allowance = Allowance.objects.get(employee=emp)
+            return allowance.net_allowance  # no parentheses now
+        except Allowance.DoesNotExist:
+            return Decimal(0)
 
     @property
     def net_salary(self):
-        return self.salary - self.total_deductions
+        return round(self.salary + self.net_allowance - self.total_deductions, 2)
 
     def __str__(self):
         return (
@@ -144,7 +153,7 @@ class Allowance(models.Model):
         from fa.models import SalaryStructure
         try:
             return SalaryStructure.objects.get(
-                structure=self.employee.salary_structure,
+                salary_structure=self.employee.salary_structure,
                 level=self.employee.grade_level,
                 step=self.employee.step
             ).annual_salary
@@ -181,15 +190,15 @@ class Allowance(models.Model):
 
     @property
     def call_duty_allowance(self):
-        if self.employee.structure in ['CONMESS', 'CONTOPSAL']:
+        if self.employee.salary_structure in ['CONMESS', 'CONTOPSAL']:
             return round(self.salary * self.call_duty_rate / 100, 2)
-        elif self.employee.structure == 'CONHESS' and self.is_clinical:
+        elif self.employee.salary_structure == 'CONHESS' and self.is_clinical:
             return round(self.salary * self.call_duty_rate / 100, 2)
         return Decimal(0)
 
     @property
     def specialist_allowance(self):
-        if self.employee.structure in ['CONMESS', 'CONTOPSAL']:
+        if self.employee.salary_structure in ['CONMESS', 'CONTOPSAL']:
             return round(self.salary * self.specialist_rate / 100, 2)
         return Decimal(0)
 
@@ -201,8 +210,18 @@ class Allowance(models.Model):
             self.shift_allowance,
             self.clinical_allowance,
             self.call_duty_allowance,
-            self.specialist_allowance
+            self.specialist_allowance,       
         ])
-  
+    
+    @property
+    def net_allowance(self):
+        return round((
+            self.hazard_allowance +
+            self.teaching_allowance +
+            self.shift_allowance +
+            self.clinical_allowance +
+            self.call_duty_allowance +
+            self.specialist_allowance
+        ), 2)
 
     
