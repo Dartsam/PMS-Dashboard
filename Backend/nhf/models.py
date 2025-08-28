@@ -12,7 +12,7 @@ MONTH_CHOICES = [
 ]
 
 class NHFDeduction(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     standard_deduction = models.ForeignKey(StandardDeduction, on_delete=models.CASCADE)
     month = models.IntegerField(choices=MONTH_CHOICES)
     year = models.IntegerField(default=datetime.now().year)

@@ -13,7 +13,7 @@ class Account(models.Model):
     paypoint = models.CharField(max_length=25)
     salary_structure = models.CharField(max_length=10)
     pfa_no = models.CharField(max_length=20)
-    user = models.ForeignKey(User, null=True, on_delete= models.CASCADE)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
     ippis_no = models.CharField(max_length=7, unique=True)
 
@@ -34,6 +34,7 @@ class SalaryStructure(models.Model):
     level = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(15)])
     step = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(15)])
     annual_salary = models.DecimalField(max_digits=12, decimal_places=2)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('salary_structure', 'level', 'step')
@@ -61,6 +62,7 @@ class StandardDeduction(models.Model):
     tax_rate = models.DecimalField(max_digits=6, decimal_places=2, default=0.0)
     nhf = models.DecimalField(max_digits=6, decimal_places=2, default=0.0)
     pension_rate = models.DecimalField(max_digits=6, decimal_places=2, default=0.0)
+    user = models.OneToOneField(User, null=True, related_name="pension_records", on_delete=models.CASCADE)
 
     @property
     def salary(self):
@@ -126,6 +128,7 @@ class StandardDeduction(models.Model):
 class Pension(models.Model):
     pfa_name = models.CharField(max_length=30, unique=True)
     pfa_code = models.CharField(max_length=20, unique=True)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.pfa_name} ({self.pfa_code})"

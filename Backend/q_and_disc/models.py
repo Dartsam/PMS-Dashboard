@@ -7,7 +7,7 @@ class QAndDisc(models.Model):
     response = models.TextField
     decision = models.TextField
     file_number = models.CharField(max_length=17, unique=True)
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.file_number

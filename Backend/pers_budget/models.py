@@ -7,7 +7,7 @@ from nom_roll.models import User, Employee
 # Create your models here.
 
 class PersonnelBudget(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
     year = models.PositiveIntegerField()
 

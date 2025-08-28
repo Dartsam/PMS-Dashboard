@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from datetime import date
 from django.core.validators import MinValueValidator, MaxValueValidator
 import os 
 from django.conf import settings
@@ -49,6 +51,13 @@ class Personal(models.Model):
     date_of_birth = models.DateField()
     updated_at = models.DateTimeField(auto_now=True)
 
+    def clean(self):
+        super().clean()
+        today = date.today()
+        min_allowed_date = today.replace(year=today.year - 18)
+        if self.date_of_birth > min_allowed_date:
+            raise ValidationError({"date_of_birth": "Staff must be at least 18 years old."})
+
     def __str__(self):
         return f" {self.user.get_full_name()}"
 # personal model ends here
@@ -67,7 +76,7 @@ class Employee(models.Model):
         ('permanent', 'Permanent'),
         ('temporary', 'Temporary'),
     ]
-
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     file_number = models.CharField(max_length=17, unique=True)
     designation = models.CharField(max_length=30)
     employment_type = models.CharField(max_length=10, 

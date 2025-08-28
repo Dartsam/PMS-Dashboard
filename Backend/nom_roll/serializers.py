@@ -2,9 +2,9 @@ from rest_framework import serializers
 from django.db import transaction
 from nom_roll.models import Personal, Employee, Department, TopManagement
 from datetime import date
-from fa.models import Account, Pension
+from fa.models import Account
 from qualifications.models import EducationalQualification, ProfessionalQualification
-from fa.serializers import AccountSerializer, PensionSerializer
+from fa.serializers import AccountSerializer
 from qualifications.serializers import EducationalQualificationSerializer, ProfessionalQualificationSerializer
 
 
@@ -13,6 +13,13 @@ class PersonalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Personal
         fields = '__all__'
+
+    def validate_date_of_birth(self, value):
+        today = date.today()
+        min_allowed_date = today.replace(year=today.year - 18)
+        if value > min_allowed_date:
+            raise serializers.ValidationError("Staff must be at least 18 years old.")
+        return value
 # PersonalSerializer ends here
 
 # EmployeeSerializer is used to serialize the Employee model. It begins here
@@ -49,6 +56,7 @@ class NominalRollSerializer(serializers.ModelSerializer):
     )
 
     date_of_birth = serializers.DateField(source='mobile_number.date_of_birth')
+    dofa = serializers.DateField()
     age_at_appointment = serializers.SerializerMethodField()
     years_left_until_retirement = serializers.SerializerMethodField()
 
