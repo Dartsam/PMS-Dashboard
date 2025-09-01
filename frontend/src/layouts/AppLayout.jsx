@@ -8,6 +8,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Collapse,
   Typography,
   IconButton,
   InputBase,
@@ -20,16 +21,19 @@ import {
   Rocket as RocketIcon,
   Assignment as AssignmentIcon,
   AccountBalance as AccountBalanceIcon,
+  Wallet as WalletIcon,
   EventNote as EventNoteIcon,
-  AccountBalanceWallet as WalletIcon,
   ChevronLeft as ChevronLeftIcon,
   Menu as MenuIcon,
   Search as SearchIcon,
   Notifications as NotificationsIcon,
+  ExpandLess,
+  ExpandMore,
 } from '@mui/icons-material';
 import Logo from '@/assets/fnph.png'
 import { useState, useMemo } from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
+import { Outlet, useNavigate, useLocation, NavLink } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -38,6 +42,12 @@ export default function AppLayout() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
+  const theme = useTheme();
+  const [openSubMenu, setOpenSubMenu] = useState(null);
+
+  const handleToggleSubMenu = (menuText) => {
+    setOpenSubMenu((prev) => (prev === menuText ? null : menuText));
+  };
 
   const today = useMemo(
     () => new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
@@ -46,13 +56,26 @@ export default function AppLayout() {
 
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-    { text: 'Employee', icon: <PeopleIcon />, path: '/employee/nominal-roll' },
-    { text: 'Career Advancement', icon: <RocketIcon />, path: '/employee/nominal-roll' },
-    { text: 'Fiscal', icon: <AccountBalanceIcon />, path: '/employee/nominal-roll' },
-    { text: 'Tasks', icon: <AssignmentIcon />, path: '/employee/nominal-roll' },
-    { text: 'Leave', icon: <EventNoteIcon />, path: '/leave' },
+    { text: 'Employee', icon: <PeopleIcon />, children: [
+      {
+        text: 'Nominal Roll',
+        path: '/employee/nominalRoll',
+      },
+      {
+        text: 'New Employee',
+        path: '/employee/newEmployee',
+      },
+      {
+        text: 'Archive',
+        path: '/employee/archive',
+      },
+    ], },
+    { text: 'Career Advancement', icon: <RocketIcon />, path: '/careereadvancement' },
     { text: 'Budget', icon: <WalletIcon />, path: '/budget' },
-    { text: 'Profile', icon: <PersonIcon />, path: '/employee/nominal-roll' },
+    { text: 'Fiscal', icon: <AccountBalanceIcon />, path: '/fiscal' },
+    { text: 'ePMS', icon: <AssignmentIcon />, path: '/epms' },
+    { text: 'Leave', icon: <EventNoteIcon />, path: '/leave' },
+    { text: 'Profile', icon: <PersonIcon />, path: '/profile' },
   
   ];
 
@@ -127,7 +150,7 @@ export default function AppLayout() {
           </IconButton>
         </Toolbar>
       </AppBar>
-
+      
       <Drawer
         variant="permanent"
         open={open}
@@ -141,41 +164,102 @@ export default function AppLayout() {
             overflowX: 'hidden',
           },
         }}
-      >
+      > 
         <Toolbar sx={{ justifyContent: open ? 'flex-end' : 'center' }} />
         <List>
-          {menuItems.map(({ text, icon, path }) => (
-            <ListItemButton
-              key={text}
-              selected={pathname === path}
-              onClick={() => navigate(path)}
-              sx={{
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon sx={{ color: '#FFF', minWidth: 0, mr: open ? 3 : 'auto' }}>
-                {icon}
-              </ListItemIcon>
-              {open && <ListItemText primary={text} />}
-            </ListItemButton>
-          ))}
-        </List>
+            {menuItems.map((item, index) => {
+              if (item.children) {
+                const isOpen = openSubMenu === item.text;
+                return (
+                  <Box key={index}>
+                    <ListItemButton
+                      onClick={() => handleToggleSubMenu(item.text)}
+                      sx={{
+                        justifyContent: open ? 'initial' : 'center',
+                        px: 2.5,
+                      }}
+                    >
+                      <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', color: '#FFF' }}>
+                        {item.icon}
+                      </ListItemIcon>
+                      {open && (
+                        <>
+                          <ListItemText primary={item.text} />
+                          {isOpen ? <ExpandLess /> : <ExpandMore />}
+                        </>
+                      )}
+                    </ListItemButton>
+
+                    <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                      <List component="div" disablePadding>
+                        {item.children.map((child, cIndex) => (
+                          <ListItemButton
+                            key={cIndex}
+                            component={NavLink}
+                            to={child.path}
+                            sx={{
+                              pl: open ? 8 : 2,
+                              '&.active': {
+                                backgroundColor: theme.palette.primary.dark,
+                                color: '#fff',
+                              },
+                            }}
+                          >
+                            <ListItemText primary={child.text} />
+                          </ListItemButton>
+                        ))}
+                      </List>
+                    </Collapse>
+                  </Box>
+                );
+              }
+
+              return (
+                <ListItemButton
+                  key={index}
+                  component={NavLink}
+                  to={item.path}
+                  sx={{
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                    '&.active': {
+                      backgroundColor: theme.palette.primary.dark,
+                      color: '#fff',
+                    },
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', color: '#FFF' }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  {open && <ListItemText primary={item.text} />}
+                </ListItemButton>
+              );
+            })}
+          </List>
       </Drawer>
 
       <Box
-        component="main"
-        sx={{
-          backgroundColor: 'background.default',
-          flexGrow: 1,
-          p: 3,
-          minHeight: '100vh',
-        }}
-      >
-        {/* push content below AppBar */}
-        <Toolbar />
-        <Outlet />
-      </Box>
+          component="main"
+           sx={{
+            flexGrow: 1,
+            bgcolor: 'background.default',
+            paddingTop: '64px',
+            width: '100%',
+            display: 'grid', marginLeft: '0', marginRight: '0',
+          //   flexDirection: 'column',
+          //   p: 0,
+          //   ml: open ? `${drawerWidth}px` : '56px', // aligns with drawer state
+          //   paddingTop: (theme) => theme.mixins.toolbar.minHeight, // ✅ correct placement
+          //   transition: (theme) =>
+          //     theme.transitions.create('margin', {
+          //       easing: theme.transitions.easing.sharp,
+          //       duration: theme.transitions.duration.leavingScreen,
+          //     }),
+           }} lg={{width: '100%', marginLeft: '0', marginRight: '0',}}
+        >
+          {/* page content */}
+          <Outlet />
+        </Box>
     </Box>
   );
 }

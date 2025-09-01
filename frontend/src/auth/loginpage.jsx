@@ -73,7 +73,7 @@ export default function LoginPage() {
 
           <Typography variant="body2" align="center">
             Don't have an account?{' '}
-            <Link href="/register" underline="hover">
+            <Link href="/newEmployee" underline="hover">
               Register here
             </Link>
           </Typography>

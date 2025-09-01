@@ -32,8 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # defaults
-    # 'django.contrib.admin',
-    'django_admin_flexlist.FlexListAdminConfig',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -156,7 +155,9 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',  # React dev server
+    'http://localhost:5174',
+    'http://localhost:5173',
+        # React dev server
     'http://127.0.0.1:3000',
     "https://example.com",
     "https://sub.example.com",
