@@ -53,7 +53,7 @@ class StandardDeductionSerializer(serializers.ModelSerializer):
 
 # AllowanceSerializer begins here 
 class AllowanceSerializer(serializers.ModelSerializer):
-    employee = serializers.SerializerMethodField()
+    file_number = serializers.SerializerMethodField()
     salary = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     hazard_allowance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     teaching_allowance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)

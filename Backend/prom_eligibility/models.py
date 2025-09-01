@@ -1,5 +1,5 @@
 from django.db import models
-from nom_roll.models import User
+from nom_roll.models import User, Employee
 
 # Create your models here.
 
@@ -16,7 +16,7 @@ class Cadre(models.Model):
 # prom_eligibility/models.py
 
 class PromotionEligibility(models.Model):
-    file_number = models.CharField(max_length=17, unique=True)
+    file_number = models.OneToOneField(Employee, on_delete = models.CASCADE)
     year = models.IntegerField()  # e.g. 2025
     is_eligible = models.BooleanField(default=False)
     checked_on = models.DateTimeField(auto_now=True)
@@ -30,7 +30,7 @@ class PromotionEligibility(models.Model):
 
 
 class PromotionExercise(models.Model):
-    file_number = models.CharField(max_length=17, unique=True)
+    file_number = models.OneToOneField(Employee, on_delete = models.CASCADE)
     aper_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
     civil_service_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
     area_of_specialization_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)

@@ -1,5 +1,6 @@
 from django.db import models
 from nom_roll.models import User
+from fa.models import Account
 
 class Performance(models.Model):
     task_name = models.CharField(max_length=30)
@@ -8,7 +9,7 @@ class Performance(models.Model):
     target = models.TextField()
     outcome = models.TextField()
     rating = models.CharField(max_length=10)
-    ippis_no = models.CharField(max_length=7)
+    ippis_no = models.OneToOneField(Account, on_delete = models.CASCADE)
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
 
 

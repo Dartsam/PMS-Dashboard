@@ -1,5 +1,6 @@
 from django.db import models
 from nom_roll.models import User, Employee
+from pension.models import Pension
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
@@ -9,16 +10,15 @@ from decimal import Decimal
 # Account model begins here
 class Account(models.Model):
     account_number = models.CharField(max_length=20, unique=True)
-    file_number = models.CharField(max_length=17, unique=True)
+    file_number = models.OneToOneField(Employee, on_delete=models.CASCADE)
     paypoint = models.CharField(max_length=25)
     salary_structure = models.CharField(max_length=10)
-    pfa_no = models.CharField(max_length=20)
+    pfa_no = models.OneToOneField(Pension, on_delete = models.CASCADE)
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
-    employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
     ippis_no = models.CharField(max_length=7, unique=True)
 
     def __str__(self):
-        return f"{self.file_number} - {self.account_number}"  
+        return f"{self.ippis_no}"  
 # Account model ends here
 
 
@@ -139,7 +139,7 @@ class Pension(models.Model):
 # Allowance model begins here
 class Allowance(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
-    employee = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
+    file_number = models.ForeignKey(Employee, null=True, on_delete=models.CASCADE)
 
     # Allowance Rates (% of Annual Salary)
     hazard_rate = models.DecimalField(max_digits=5, decimal_places=2, default=10.0)
@@ -152,16 +152,16 @@ class Allowance(models.Model):
     is_clinical = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.employee} Allowances"
+        return f"{self.file_number} Allowances"
 
     @property
     def salary(self):
         from fa.models import SalaryStructure
         try:
             return SalaryStructure.objects.get(
-                salary_structure=self.employee.salary_structure,
-                level=self.employee.grade_level,
-                step=self.employee.step
+                salary_structure=self.file_number.salary_structure,
+                level=self.file_number.grade_level,
+                step=self.file_number.step
             ).annual_salary
         except SalaryStructure.DoesNotExist:
             return Decimal(0)
@@ -174,37 +174,37 @@ class Allowance(models.Model):
 
     @property
     def teaching_allowance(self):
-        if self.employee.salary_structure in ['CONMESS', 'CONTOPSAL']:
+        if self.file_number.salary_structure in ['CONMESS', 'CONTOPSAL']:
             return round(self.salary * self.teaching_rate / 100, 2)
-        elif self.employee.salary_structure == 'CONHESS' and self.employee.grade_level >= 9:
+        elif self.file_number.salary_structure == 'CONHESS' and self.file_number.grade_level >= 9:
             return round(self.salary * self.teaching_rate / 100, 2)
         return Decimal(0)
 
     @property
     def shift_allowance(self):
-        if self.employee.salary_structure == 'CONHESS' and not self.is_clinical:
+        if self.file_number.salary_structure == 'CONHESS' and not self.is_clinical:
             return round(self.salary * self.shift_rate / 100, 2)
         return Decimal(0)
 
     @property
     def clinical_allowance(self):
-        if self.employee.salary_structure in ['CONMESS', 'CONTOPSAL']:
+        if self.file_number.salary_structure in ['CONMESS', 'CONTOPSAL']:
             return round(self.salary * self.clinical_rate / 100, 2)
-        elif self.employee.salary_structure == 'CONHESS' and self.is_clinical:
+        elif self.file_number.salary_structure == 'CONHESS' and self.is_clinical:
             return round(self.salary * self.clinical_rate / 100, 2)
         return Decimal(0)
 
     @property
     def call_duty_allowance(self):
-        if self.employee.salary_structure in ['CONMESS', 'CONTOPSAL']:
+        if self.file_number.salary_structure in ['CONMESS', 'CONTOPSAL']:
             return round(self.salary * self.call_duty_rate / 100, 2)
-        elif self.employee.salary_structure == 'CONHESS' and self.is_clinical:
+        elif self.file_number.salary_structure == 'CONHESS' and self.is_clinical:
             return round(self.salary * self.call_duty_rate / 100, 2)
         return Decimal(0)
 
     @property
     def specialist_allowance(self):
-        if self.employee.salary_structure in ['CONMESS', 'CONTOPSAL']:
+        if self.file_number.salary_structure in ['CONMESS', 'CONTOPSAL']:
             return round(self.salary * self.specialist_rate / 100, 2)
         return Decimal(0)
 

@@ -43,7 +43,7 @@ class AllowanceAdmin(FlexListAdmin):
     # list_display = ['employee', 'hazard_rate', 'teaching_rate', 'is_clinical', 
     #                 'specialist_rate','shift_rate', 'clinical_rate',
     #                 'call_duty_rate',]
-    list_display = ('employee', 'is_clinical',
+    list_display = ('file_number', 'is_clinical',
         'hazard_allowance',
         'teaching_allowance',
         'shift_allowance',

@@ -59,7 +59,7 @@ class Personal(models.Model):
             raise ValidationError({"date_of_birth": "Staff must be at least 18 years old."})
 
     def __str__(self):
-        return f" {self.user.get_full_name()}"
+        return f" {self.first_name} {self.last_name}"
 # personal model ends here
 
 # employee model begins here. file_number, designation, employment_type,
@@ -101,7 +101,7 @@ class Employee(models.Model):
     )
     department = models.CharField(max_length=20)
     office_email = models.EmailField()
-    mobile_number = models.CharField(max_length=15)
+    mobile_number = models.ForeignKey(Personal, on_delete=models.CASCADE)
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     isHOD = models.BooleanField(default=False)
     signature =  models.ImageField(
