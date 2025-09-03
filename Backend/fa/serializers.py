@@ -5,6 +5,7 @@ from .models import (
     Pension, Allowance
 )
 
+
 # PensionSerializer begins here
 class PensionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,16 +15,22 @@ class PensionSerializer(serializers.ModelSerializer):
 
 # AccountSerializer begins here
 class AccountSerializer(serializers.ModelSerializer):
-    file_number = serializers.SerializerMethodField()
     pfa_no = PensionSerializer(read_only=True)
 
     class Meta:
         model = Account
-        fields = '__all__'
+        exclude = ("user",)
+# class AccountSerializer(serializers.ModelSerializer):
+#     file_number = serializers.SerializerMethodField()
+#     pfa_no = PensionSerializer(read_only=True)
 
-    def get_file_number(self, obj):
-        from nom_roll.serializers import EmployeeSerializer   # local import fixes cycle
-        return EmployeeSerializer(self.file_number, read_only=True).data
+#     class Meta:
+#         model = Account
+#         fields = '__all__'
+
+#     def get_file_number(self, obj):
+#         from nom_roll.serializers import EmployeeSerializer   # local import fixes cycle
+#         return EmployeeSerializer(self.file_number, read_only=True).data
 # AccountSerializer ends here
 
 

@@ -59,7 +59,7 @@ class Personal(models.Model):
             raise ValidationError({"date_of_birth": "Staff must be at least 18 years old."})
 
     def __str__(self):
-        return f" {self.first_name} {self.last_name}"
+        return f"{self.mobile_number}"
 # personal model ends here
 
 # employee model begins here. file_number, designation, employment_type,
