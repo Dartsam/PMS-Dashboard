@@ -8,18 +8,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('qualifications', '0001_initial'),
+        ('nom_roll', '0001_initial'),
+        ('tasks', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='educationalqualification',
-            name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name='task',
+            name='file_number',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='nom_roll.employee'),
         ),
         migrations.AlterField(
-            model_name='professionalqualification',
+            model_name='task',
             name='user',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),

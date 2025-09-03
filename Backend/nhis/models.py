@@ -12,8 +12,8 @@ class Nhis(models.Model):
     name = models.CharField(max_length=50)
     dob = models.DateField()
     relationship = models.CharField(max_length=10, choices=RELATIONSHIP_CHOICES)
-    email = models.OneToOneField(Personal, on_delete = models.CASCADE)
-    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    email = models.ForeignKey(Personal, on_delete = models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

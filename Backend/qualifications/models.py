@@ -10,7 +10,7 @@ class EducationalQualification(models.Model):
     end_date = models.DateField()
     certificate_obtained = models.CharField(max_length=10, unique=True)
     certificate_id = models.CharField(max_length=20, unique=True)
-    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.certificate_obtained
@@ -25,7 +25,7 @@ class ProfessionalQualification(models.Model):
     issue_date = models.DateField()
     expiry_date = models.DateField()
     licence_number = models.CharField(max_length=20, unique=True)   
-    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.certificate_name

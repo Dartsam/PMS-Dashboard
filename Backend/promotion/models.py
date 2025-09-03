@@ -7,8 +7,8 @@ class Promotion(models.Model):
     designation = models.CharField(max_length=30)
     step = models.IntegerField()
     dolp = models.DateField()
-    file_number = models.OneToOneField(Employee, on_delete = models.CASCADE)
-    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    file_number = models.ForeignKey(Employee, on_delete = models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.designation

@@ -46,9 +46,9 @@ class StandardDeductionSerializer(serializers.ModelSerializer):
     total_deductions = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     net_salary = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
-    class Meta:
-        model = StandardDeduction
-        fields = '__all__'
+    # class Meta:
+    #     model = StandardDeduction
+    #     fields = '__all__'
 # StandardDeductionSerializer ends here
 
 # AllowanceSerializer begins here 
@@ -69,5 +69,5 @@ class AllowanceSerializer(serializers.ModelSerializer):
 
     def get_employee(self, obj):
         from nom_roll.serializers import EmployeeSerializer
-        return EmployeeSerializer(obj.employee, read_only=True).data
+        return EmployeeSerializer(obj.ippis_number, read_only=True).data
 # AllowanceSerializer ends here

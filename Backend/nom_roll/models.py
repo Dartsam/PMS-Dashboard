@@ -99,7 +99,7 @@ class Employee(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, 
                               default='active'
     )
-    department = models.CharField(max_length=20)
+    department = models.ForeignKey(Department, on_delete = models.CASCADE)
     office_email = models.EmailField()
     mobile_number = models.ForeignKey(Personal, on_delete=models.CASCADE)
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)

@@ -105,7 +105,7 @@ class StandardDeduction(models.Model):
     def net_allowance(self):
         try:
             emp = self.ippis_account.file_number  # Employee instance
-            allowance = Allowance.objects.get(employee=emp)
+            allowance = Allowance.objects.get(file_number=emp)
             return allowance.net_allowance  # no parentheses now
         except Allowance.DoesNotExist:
             return Decimal(0)
@@ -116,7 +116,7 @@ class StandardDeduction(models.Model):
 
     def __str__(self):
         return (
-            f"IPPS No: {self.ippis_account}, Pension: {self.pension_rate}% | "
+            f"IPPIS No: {self.ippis_account}, Pension: {self.pension_rate}% | "
             f"Tax: {self.tax_rate}% | NHIS: {self.nhis}% | NHF: {self.nhf}% | "
             f"Net Salary: ₦{self.net_salary:,.2f} "
         )
