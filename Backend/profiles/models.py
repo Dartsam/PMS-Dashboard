@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from nom_roll.models import Employee
-from fa.models import Account
+from nom_roll.models import User
 import os
 from django.conf import settings
 from PIL import Image
@@ -14,8 +13,9 @@ class Profile(models.Model):
         null=True
     )
     name = models.CharField(max_length=50)
-    file_number = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    ippis_no = models.ForeignKey(Account, on_delete=models.CASCADE)
+    file_number = models.CharField(max_length=17)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    ippis_no = models.CharField(max_length=7)
     designation = models.CharField(max_length=30)
     grade_level = models.IntegerField(validators=[MinValueValidator(1),
                                                    MaxValueValidator(15)])
@@ -53,15 +53,18 @@ class Profile(models.Model):
 
 
 class CareerDescending(models.Model):
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     promotion_year = models.DateField()
     previous_designation = models.CharField(max_length=30)
     current_designation = models.CharField(max_length=30)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.current_designation
 
 
 class LeaveDescending(models.Model):
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField()
     nature_of_leave = models.CharField(max_length=50)
@@ -72,6 +75,7 @@ class LeaveDescending(models.Model):
 
 
 class QualificationsDescending(models.Model):
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     start_year = models.DateField()
     finish = models.DateField() 
     certificate_obtained = models.CharField(max_length=10)
@@ -82,6 +86,7 @@ class QualificationsDescending(models.Model):
 
 
 class ProfessionalCertificate(models.Model):
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     issuing_body = models.CharField(max_length=50)
     issue_date = models.DateField()
     expiry_date = models.DateField()

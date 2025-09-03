@@ -1,13 +1,14 @@
 from django.db import models
-from nom_roll.models import Employee
 from django.core.validators import MinValueValidator, MaxValueValidator
 from fa.models import SalaryStructure
 from prom_eligibility.models import PromotionEligibility
+from nom_roll.models import User, Employee
 
 # Create your models here.
 
 class PersonnelBudget(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    file_number = models.OneToOneField(Employee, null=True, on_delete=models.CASCADE)
     year = models.PositiveIntegerField()
 
     # computed fields
@@ -18,15 +19,18 @@ class PersonnelBudget(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    # class Meta:
+    #     unique_together = ('file_number', 'year')
+    #     ordering = ['file_number__file_number']
+
     class Meta:
-        unique_together = ('employee', 'year')
-        ordering = ['employee__file_number']
+        pass
 
     def save(self, *args, **kwargs):
         # fetch eligibility for this year
         try:
             pe = PromotionEligibility.objects.get(
-                file_number=self.employee,
+                file_number=self.file_number,
                 year=self.year
             )
             eligible = pe.is_eligible
@@ -34,9 +38,9 @@ class PersonnelBudget(models.Model):
             eligible = False
 
         # starting values
-        lvl = self.employee.grade_level
-        stp = self.employee.step
-        desig = self.employee.designation
+        lvl = self.file_number.grade_level
+        stp = self.file_number.step
+        desig = self.file_number.designation
 
         # apply logic
         if not eligible:
@@ -75,7 +79,7 @@ class PersonnelBudget(models.Model):
         # lookup salary
         try:
             salary_obj = SalaryStructure.objects.get(
-                salary_structure=self.employee.salary_structure,
+                salary_structure=self.file_number.salary_structure,
                 level=lvl,
                 step=stp
             )

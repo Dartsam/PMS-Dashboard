@@ -4,7 +4,6 @@ from .models import (
     Account, SalaryStructure, StandardDeduction, 
     Pension, Allowance
 )
-from nom_roll.serializers import EmployeeSerializer
 
 # PensionSerializer begins here
 class PensionSerializer(serializers.ModelSerializer):
@@ -15,12 +14,16 @@ class PensionSerializer(serializers.ModelSerializer):
 
 # AccountSerializer begins here
 class AccountSerializer(serializers.ModelSerializer):
-    file_number = EmployeeSerializer(read_only=True)
+    file_number = serializers.SerializerMethodField()
     pfa_no = PensionSerializer(read_only=True)
 
     class Meta:
         model = Account
         fields = '__all__'
+
+    def get_file_number(self, obj):
+        from nom_roll.serializers import EmployeeSerializer   # local import fixes cycle
+        return EmployeeSerializer(self.file_number, read_only=True).data
 # AccountSerializer ends here
 
 
@@ -43,14 +46,14 @@ class StandardDeductionSerializer(serializers.ModelSerializer):
     total_deductions = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     net_salary = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
-    class Meta:
-        model = StandardDeduction
-        fields = '__all__'
+    # class Meta:
+    #     model = StandardDeduction
+    #     fields = '__all__'
 # StandardDeductionSerializer ends here
 
 # AllowanceSerializer begins here 
 class AllowanceSerializer(serializers.ModelSerializer):
-    employee = EmployeeSerializer(read_only=True)
+    file_number = serializers.SerializerMethodField()
     salary = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     hazard_allowance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     teaching_allowance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
@@ -63,4 +66,8 @@ class AllowanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Allowance
         fields = '__all__'
+
+    def get_employee(self, obj):
+        from nom_roll.serializers import EmployeeSerializer
+        return EmployeeSerializer(obj.ippis_number, read_only=True).data
 # AllowanceSerializer ends here

@@ -1,5 +1,5 @@
 from django.db import models
-from nom_roll.models import Employee
+from nom_roll.models import User, Employee
 
 class Task(models.Model):
     task_id = models.IntegerField()
@@ -7,7 +7,8 @@ class Task(models.Model):
     target = models.TextField()
     result = models.TextField()
     date = models.DateField()
-    file_number = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    file_number = models.ForeignKey(Employee, on_delete = models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
 
     def __str__(self):

@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from datetime import date
 from django.core.validators import MinValueValidator, MaxValueValidator
 import os 
 from django.conf import settings
@@ -11,6 +13,7 @@ User = get_user_model()
 class Department(models.Model):
     name = models.CharField(max_length=100, unique=True)
     code = models.CharField(max_length=3, unique=True)  # was 'id'
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -37,20 +40,26 @@ class Personal(models.Model):
                     ("Sokoto", "Sokoto"), ("Taraba", "Taraba"), 
                     ("Yobe", "Yobe"), ("Zamfara", "Zamfara"),
     ]
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     state_of_origin = models.CharField(max_length=20, choices=STATE_CHOICES)
     email = models.EmailField(unique=True)
-    mobile_number = models.CharField(max_length=15, unique=True, 
-                                     primary_key=True)
+    mobile_number = models.CharField(max_length=15, unique=True)
     home_address = models.CharField(max_length=150)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     date_of_birth = models.DateField()
     updated_at = models.DateTimeField(auto_now=True)
 
+    def clean(self):
+        super().clean()
+        today = date.today()
+        min_allowed_date = today.replace(year=today.year - 18)
+        if self.date_of_birth > min_allowed_date:
+            raise ValidationError({"date_of_birth": "Staff must be at least 18 years old."})
+
     def __str__(self):
-        return f" {self.user.get_full_name()}"
+        return f" {self.first_name} {self.last_name}"
 # personal model ends here
 
 # employee model begins here. file_number, designation, employment_type,
@@ -67,10 +76,8 @@ class Employee(models.Model):
         ('permanent', 'Permanent'),
         ('temporary', 'Temporary'),
     ]
-
-    file_number = models.CharField(
-                    max_length=17, unique=True, primary_key = True
-    )
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    file_number = models.CharField(max_length=17, unique=True)
     designation = models.CharField(max_length=30)
     employment_type = models.CharField(max_length=10, 
                         choices=EMPLOYEE_TYPE_CHOICES, 
@@ -92,12 +99,10 @@ class Employee(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, 
                               default='active'
     )
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    office_email = models.EmailField(unique=True)
-    mobile_number = models.OneToOneField(
-        Personal, on_delete=models.CASCADE, unique=True, 
-        related_name='employee_by_mobile'
-    )
+    department = models.ForeignKey(Department, on_delete = models.CASCADE)
+    office_email = models.EmailField()
+    mobile_number = models.ForeignKey(Personal, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     isHOD = models.BooleanField(default=False)
     signature =  models.ImageField(
         upload_to='signature/',
@@ -142,6 +147,7 @@ class TopManagement(models.Model):
     qualifications = models.CharField(max_length=50)
     email = models.EmailField()
     mobile_number = models.CharField(max_length=15)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.position
