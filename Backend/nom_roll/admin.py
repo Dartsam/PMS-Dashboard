@@ -1,12 +1,12 @@
 from django.contrib import admin
-from .models import Personal, Employee, Department, TopManagement
+from .models import Personal, Employee, Department, TopManagement, EmployeeDocument
 from django_admin_flexlist import FlexListAdmin
 # Register your models here.
 
 # Register the Personal model with the admin site
 @admin.register(Personal)  
 class PersonalAdmin(FlexListAdmin):
-    list_display = ['user', 'first_name', 'last_name', 'email', 
+    list_display = ['user', 'first_name', 'last_name', 'state_of_origin', 'email', 
                     'mobile_number', 'home_address', 'gender', 
                     'date_of_birth',
                     ]  
@@ -34,3 +34,7 @@ class DepartmentAdmin(FlexListAdmin):
 @admin.register(TopManagement)
 class TopManagementAdmin(FlexListAdmin):
     list_display = ['name', 'position', 'qualifications', 'email', 'mobile_number']
+
+@admin.register(EmployeeDocument)
+class EmployeeDocumentAdmin(FlexListAdmin):
+    list_display = ['file_number', 'name', 'file']

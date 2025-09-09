@@ -40,6 +40,6 @@ class PensionViewSet(viewsets.ModelViewSet):
 
 
 class AllowanceViewSet(viewsets.ModelViewSet):
-    queryset = Allowance.objects.select_related('employee').all()
+    queryset = Allowance.objects.select_related('file_number').all()
     serializer_class = AllowanceSerializer
     permission_classes = [IsAuthenticated]

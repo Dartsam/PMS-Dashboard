@@ -1,30 +1,11 @@
-from django.shortcuts import render
-from rest_framework import viewsets, permissions, status
-from rest_framework.response import Response
-from .models import *
-from .serializers import *
+# from rest_framework import generics, permissions
+# from .serializers import ProfileSerializer
+# from nom_roll.models import User
 
-class ProfileViewset(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
-    serializer_class = ProfileSerializer
-    queryset = Profile.objects.all()
+# class ProfileDetailView(generics.RetrieveAPIView):
+#     serializer_class = ProfileSerializer
+#     permission_classes = [permissions.IsAuthenticated]
 
-class CareerDescendingViewset(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
-    serializer_class = CareerDescendingSerializer
-    queryset = CareerDescending.objects.all()
-
-class LeaveDescendingViewset(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
-    serializer_class = LeaveDescendingSerializer
-    queryset = LeaveDescending.objects.all()
-
-class QualificationsDescendingViewset(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
-    serializer_class = QualificationsDescendingSerializer
-    queryset = QualificationsDescending.objects.all()
-
-class ProfessionalCertificateViewset(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
-    serializer_class = ProfessionalCertificateSerializer
-    queryset = ProfessionalCertificate.objects.all()
+#     def get_object(self):
+#         # If you want staff to see their own profile
+#         return self.request.user

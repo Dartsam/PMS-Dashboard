@@ -4,18 +4,19 @@ from .models import (
     Account, SalaryStructure, StandardDeduction, 
     Pension, Allowance
 )
+from pension.serializers import PensionSerializer as PfaSerializer
 
 
 # PensionSerializer begins here
 class PensionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pension
-        fields = '__all__'
+        fields = ["pfa_name", "pfa_code"]
 # PensionSerializer ends here
 
 # AccountSerializer begins here
 class AccountSerializer(serializers.ModelSerializer):
-    pfa_no = PensionSerializer(read_only=True)
+    pfa_no = PfaSerializer(read_only=True)
 
     class Meta:
         model = Account
@@ -53,9 +54,9 @@ class StandardDeductionSerializer(serializers.ModelSerializer):
     total_deductions = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     net_salary = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
-    # class Meta:
-    #     model = StandardDeduction
-    #     fields = '__all__'
+    class Meta:
+        model = StandardDeduction
+        fields = '__all__'
 # StandardDeductionSerializer ends here
 
 # AllowanceSerializer begins here 
@@ -74,7 +75,7 @@ class AllowanceSerializer(serializers.ModelSerializer):
         model = Allowance
         fields = '__all__'
 
-    def get_employee(self, obj):
+    def get_file_number(self, obj):
         from nom_roll.serializers import EmployeeSerializer
-        return EmployeeSerializer(obj.ippis_number, read_only=True).data
+        return EmployeeSerializer(obj.file_number, read_only=True).data
 # AllowanceSerializer ends here
