@@ -2,10 +2,10 @@ from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
 from rest_framework import status
 # from rest_framework.decorators import action
-from .models import Personal, Employee, Department, TopManagement
+from .models import Personal, Employee, Department, TopManagement, EmployeeDocument
 from .serializers import (PersonalSerializer, EmployeeSerializer, 
                           DepartmentSerializer, TopManagementSerializer, 
-                          NominalRollSerializer, StaffCreateSerializer, ProfileSerializer)
+                          NominalRollSerializer, StaffCreateSerializer, ProfileSerializer, EmployeeDocumentSerializer)
 import re
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -35,7 +35,7 @@ class EmployeeByDigitsDetail(generics.RetrieveAPIView):
         return Response(serializer.data)
     
 class EmployeeProfileAPIView(APIView):
-    permission_classes = [AllowAny]     # Test purpose; change to IsAuthenticated in production
+    permission_classes = [permissions.AllowAny]     # Test purpose; change to IsAuthenticated in production
 
     def get(self, request, digits, format=None):
         # find first employee where file_number contains the digits
@@ -83,6 +83,11 @@ class PersonalViewset(viewsets.ModelViewSet):
 class EmployeeViewset(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+    permission_classes = [permissions.AllowAny]
+
+class EmployeeDocumentViewset(viewsets.ModelViewSet):
+    queryset = EmployeeDocument.objects.all().order_by('-uploaded_at')
+    serializer_class = EmployeeDocumentSerializer
     permission_classes = [permissions.AllowAny]
 
 class DepartmentViewset(viewsets.ModelViewSet):
