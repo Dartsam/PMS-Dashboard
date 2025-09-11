@@ -1,15 +1,16 @@
 import { Box, TextField, Typography, Button, Grid, IconButton } from "@mui/material";
 import { AddCircleOutline, DeleteOutline } from "@mui/icons-material";
 
-
 export default function ProfessionalCertifications({
   formData,
   handleChange,
   handleFileChange,
   handleAddCertificate,
   handleRemoveCertificate,
-}
-) {
+}) {
+  // ensure certificates array exists
+  const certificates = formData.certificates ?? [];
+
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
@@ -17,16 +18,25 @@ export default function ProfessionalCertifications({
       </Typography>
 
       {/* Render certificates */}
-      {formData.certificates?.map((cert, index) => (
-        <Box key={index} mb={3} p={2} border="1px solid #ddd" borderRadius={2}>
+      {certificates.map((cert, index) => (
+        <Box
+          key={index}
+          mb={3}
+          p={2}
+          border="1px solid #ddd"
+          borderRadius={2}
+          aria-labelledby={`cert-section-${index}`}
+        >
           <Grid container spacing={2}>
             {/* Profession Issuing Body */}
             <Grid item xs={12} md={6}>
               <TextField
-                fullWidth
+                id={`cert-issuing-body-${index}`}
+                name={`certificates[${index}].issuing_body`}
                 label="Profession Issuing Body"
-                name={`certificates[${index}].issuingBody`}
-                value={cert.issuingBody || ""}
+                fullWidth
+                autoComplete="organization"
+                value={cert.issuing_body || ""}
                 onChange={handleChange}
               />
             </Grid>
@@ -34,10 +44,12 @@ export default function ProfessionalCertifications({
             {/* Certificate ID */}
             <Grid item xs={12} md={6}>
               <TextField
-                fullWidth
+                id={`cert-id-${index}`}
+                name={`certificates[${index}].certificate_id`}
                 label="Certificate ID"
-                name={`certificates[${index}].certificateId`}
-                value={cert.certificateId || ""}
+                fullWidth
+                autoComplete="off"
+                value={cert.certificate_id || ""}
                 onChange={handleChange}
               />
             </Grid>
@@ -45,10 +57,11 @@ export default function ProfessionalCertifications({
             {/* Certificate Name */}
             <Grid item xs={12} md={6}>
               <TextField
-                fullWidth
+                id={`cert-name-${index}`}
+                name={`certificates[${index}].certificate_name`}
                 label="Certificate Name"
-                name={`certificates[${index}].certificateName`}
-                value={cert.certificateName || ""}
+                fullWidth
+                value={cert.certificate_name || ""}
                 onChange={handleChange}
               />
             </Grid>
@@ -56,12 +69,13 @@ export default function ProfessionalCertifications({
             {/* Issue Date */}
             <Grid item xs={12} md={6}>
               <TextField
-                fullWidth
-                type="date"
-                InputLabelProps={{ shrink: true }}
+                id={`cert-issue-date-${index}`}
+                name={`certificates[${index}].issue_date`}
                 label="Issue Date"
-                name={`certificates[${index}].issueDate`}
-                value={cert.issueDate || ""}
+                type="date"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                value={cert.issue_date || ""}
                 onChange={handleChange}
               />
             </Grid>
@@ -69,12 +83,13 @@ export default function ProfessionalCertifications({
             {/* Expiry Date */}
             <Grid item xs={12} md={6}>
               <TextField
-                fullWidth
-                type="date"
-                InputLabelProps={{ shrink: true }}
+                id={`cert-expiry-date-${index}`}
+                name={`certificates[${index}].expiry_date`}
                 label="Expiry Date"
-                name={`certificates[${index}].expiryDate`}
-                value={cert.expiryDate || ""}
+                type="date"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                value={cert.expiry_date || ""}
                 onChange={handleChange}
               />
             </Grid>
@@ -82,30 +97,37 @@ export default function ProfessionalCertifications({
             {/* License Number */}
             <Grid item xs={12} md={6}>
               <TextField
-                fullWidth
+                id={`cert-license-${index}`}
+                name={`certificates[${index}].license_number`}
                 label="License Number"
-                name={`certificates[${index}].licenseNumber`}
-                value={cert.licenseNumber || ""}
+                fullWidth
+                value={cert.license_number || ""}
                 onChange={handleChange}
               />
             </Grid>
 
             {/* Upload Certificate */}
             <Grid item xs={12}>
-              <Typography>Upload Certificate:</Typography>
+              <Typography component="label" htmlFor={`cert-file-${index}`}>
+                Upload Certificate:
+              </Typography>
               <input
+                id={`cert-file-${index}`}
+                aria-label={`Upload certificate file ${index + 1}`}
                 type="file"
                 accept=".pdf,.jpg,.jpeg,.png"
-                name={`certificates[${index}].certificateFile`}
+                name={`certificates[${index}].certificate_file`}
                 onChange={(e) => handleFileChange(e, index)}
+                style={{ display: "block", marginTop: 8 }}
               />
             </Grid>
 
             {/* Delete Button (only if >1 certificate) */}
-            {formData.certificates.length > 1 && (
+            {certificates.length > 1 && (
               <Grid item xs={12}>
                 <IconButton
                   color="error"
+                  aria-label={`Remove certificate ${index + 1}`}
                   onClick={() => handleRemoveCertificate(index)}
                 >
                   <DeleteOutline />
@@ -117,15 +139,18 @@ export default function ProfessionalCertifications({
       ))}
 
       {/* Add Certificate Button */}
-      <Button
-        variant="outlined"
-        startIcon={<AddCircleOutline />}
-        onClick={handleAddCertificate}
-      >
-        {formData.certificates?.length > 0
-          ? "Add Another Certificate"
-          : "Add Certificate"}
-      </Button>
+      <Box mt={2}>
+        <Button
+          variant="outlined"
+          startIcon={<AddCircleOutline />}
+          onClick={handleAddCertificate}
+          disabled={certificates.length >= 10}
+          aria-disabled={certificates.length >= 10}
+        >
+          {certificates.length > 0 ? "Add Another Certificate" : "Add Certificate"}
+          {certificates.length >= 10 ? ` (limit ${certificates.length}/10)` : ""}
+        </Button>
+      </Box>
     </Box>
   );
 }

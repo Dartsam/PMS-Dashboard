@@ -1,6 +1,25 @@
-import { Box, TextField, Typography, Grid } from "@mui/material";
+import { Box, TextField, Typography, Grid, MenuItem } from "@mui/material";
 
 export default function EmploymentDetails({ formData, handleChange }) {
+  const salaryOptions = [
+    { value: "CONHESS", label: "CONHESS" },
+    { value: "CONMESS", label: "CONMESS" },
+    { value: "CONTOPSAL", label: "CONTOPSAL" },
+  ];
+
+  const employmentTypeOptions = [
+    { value: "permanent", label: "Permanent" },
+    { value: "temporary", label: "Temporary" },
+  ];
+
+  const statusOptions = [
+    { value: "active", label: "Active" },
+    { value: "retired", label: "Retired" },
+    { value: "deceased", label: "Deceased" },
+    { value: "resigned", label: "Resigned" },
+    { value: "terminated", label: "Terminated" },
+  ];
+
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
@@ -11,10 +30,12 @@ export default function EmploymentDetails({ formData, handleChange }) {
         {/* File Number */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
+            id="file_number"
+            name="file_number"
             label="File Number"
-            name="fileNumber"
-            value={formData.fileNumber || ""}
+            fullWidth
+            autoComplete="off"
+            value={formData.file_number || ""}
             onChange={handleChange}
           />
         </Grid>
@@ -22,43 +43,65 @@ export default function EmploymentDetails({ formData, handleChange }) {
         {/* Designation */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
-            label="Designation"
+            id="designation"
             name="designation"
+            label="Designation"
+            fullWidth
             value={formData.designation || ""}
             onChange={handleChange}
           />
         </Grid>
 
-        {/* Employment Type */}
+        {/* Employment Type (dropdown) */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
+            id="employment_type"
+            name="employment_type"
             label="Employment Type"
-            name="employmentType"
-            value={formData.employmentType || ""}
+            select
+            fullWidth
+            value={formData.employment_type || ""}
             onChange={handleChange}
-          />
+          >
+            <MenuItem value="">Select</MenuItem>
+            {employmentTypeOptions.map((o) => (
+              <MenuItem key={o.value} value={o.value}>
+                {o.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </Grid>
 
-        {/* Salary Structure */}
+        {/* Salary Structure (dropdown) */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
+            id="salary_structure"
+            name="salary_structure"
             label="Salary Structure"
-            name="salaryStructure"
-            value={formData.salaryStructure || ""}
+            select
+            fullWidth
+            value={formData.salary_structure || ""}
             onChange={handleChange}
-          />
+          >
+            <MenuItem value="">Select</MenuItem>
+            {salaryOptions.map((o) => (
+              <MenuItem key={o.value} value={o.value}>
+                {o.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </Grid>
 
         {/* Grade Level */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
+            id="grade_level"
+            name="grade_level"
             label="Grade Level"
-            name="gradeLevel"
-            value={formData.gradeLevel || ""}
+            type="number"
+            fullWidth
+            inputProps={{ min: 1, max: 15 }}
+            value={formData.grade_level ?? ""}
             onChange={handleChange}
           />
         </Grid>
@@ -66,94 +109,101 @@ export default function EmploymentDetails({ formData, handleChange }) {
         {/* Step */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
-            label="Step"
+            id="step"
             name="step"
-            value={formData.step || ""}
+            label="Step"
+            type="number"
+            fullWidth
+            inputProps={{ min: 1, max: 15 }}
+            value={formData.step ?? ""}
             onChange={handleChange}
           />
         </Grid>
 
-        {/* Date of First Appointment */}
+        {/* Date of First Appointment (DOFA) */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
-            type="date"
-            label="Date of First Appointment (DOFA)"
+            id="dofa"
             name="dofa"
+            label="Date of First Appointment (DOFA)"
+            type="date"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
             value={formData.dofa || ""}
             onChange={handleChange}
-            InputLabelProps={{ shrink: true }}
           />
         </Grid>
 
-        {/* Date of Last Promotion */}
+        {/* Date of Last Promotion (DOLP) */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
-            type="date"
-            label="Date of Last Promotion (DOLP)"
+            id="dolp"
             name="dolp"
+            label="Date of Last Promotion (DOLP)"
+            type="date"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
             value={formData.dolp || ""}
             onChange={handleChange}
-            InputLabelProps={{ shrink: true }}
           />
         </Grid>
 
-        {/* Expected Date of Retirement */}
+        {/* Expected Date of Retirement (EDOR) */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
-            type="date"
-            label="Expected Date of Retirement (EDOR)"
+            id="edor"
             name="edor"
+            label="Expected Date of Retirement (EDOR)"
+            type="date"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
             value={formData.edor || ""}
             onChange={handleChange}
-            InputLabelProps={{ shrink: true }}
           />
         </Grid>
 
-        {/* Status */}
+        {/* Status (dropdown) */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
-            label="Status"
+            id="status"
             name="status"
+            label="Status"
+            select
+            fullWidth
             value={formData.status || ""}
             onChange={handleChange}
-          />
+          >
+            <MenuItem value="">Select</MenuItem>
+            {statusOptions.map((o) => (
+              <MenuItem key={o.value} value={o.value}>
+                {o.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </Grid>
 
-        {/* Department */}
+        {/* Department (text for now; later you can replace with select populated from API) */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
-            label="Department"
+            id="department"
             name="department"
+            label="Department"
+            fullWidth
             value={formData.department || ""}
             onChange={handleChange}
+            helperText="Use exact department name or wire this field to a department select."
           />
         </Grid>
 
         {/* Office Email */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
-            type="email"
+            id="office_email"
+            name="office_email"
             label="Office Email"
-            name="officeEmail"
-            value={formData.officeEmail || ""}
-            onChange={handleChange}
-          />
-        </Grid>
-
-        {/* IPPIS Number */}
-        <Grid item xs={12} md={6}>
-          <TextField
+            type="email"
             fullWidth
-            label="IPPIS Number"
-            name="ippisNumber"
-            value={formData.ippisNumber || ""}
+            value={formData.office_email || ""}
             onChange={handleChange}
           />
         </Grid>

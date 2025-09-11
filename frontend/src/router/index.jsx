@@ -4,6 +4,8 @@ import AppLayout from '@/layouts/AppLayout';
 import DashboardPage from '@/features/dashboard/DashboardPage';
 import NominalRoll from '@/features/employee/nominalRoll/NominalRoll';
 import EmployeeForm from '../features/employee/newEmployee/EmployeeForm';
+import Archive from '@/features/employee/archive/Archive';
+import Profile from '@/features/profile/Profile';
 
 
 function AppRouter() {
@@ -16,6 +18,10 @@ function AppRouter() {
           <Route index element={<DashboardPage />} />
           <Route path="employee/nominalRoll" element={<NominalRoll />} />
           <Route path="employee/newEmployee" element={<EmployeeForm />} />
+          <Route path="employee/archive" element={<Archive />} />
+          <Route path="/profile" element={<Profile />} />
+
+          <Route path="employee/:id/profile" element={<Profile />} /> 
 
         </Route>
       </Routes>

@@ -1,6 +1,12 @@
-import { Box, TextField, Typography, Grid } from "@mui/material";
+import { Box, TextField, Typography, Grid, MenuItem } from "@mui/material";
 
 export default function PayrollPensionInfo({ formData, handleChange }) {
+  const salaryOptions = [
+    { value: "CONHESS", label: "CONHESS" },
+    { value: "CONMESS", label: "CONMESS" },
+    { value: "CONTOPSAL", label: "CONTOPSAL" },
+  ];
+
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
@@ -11,10 +17,12 @@ export default function PayrollPensionInfo({ formData, handleChange }) {
         {/* Account Number */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
+            id="account_number"
+            name="account_number"
             label="Account Number"
-            name="accountNumber"
-            value={formData.accountNumber || ""}
+            fullWidth
+            autoComplete="off"
+            value={formData.account_number || ""}
             onChange={handleChange}
           />
         </Grid>
@@ -22,9 +30,10 @@ export default function PayrollPensionInfo({ formData, handleChange }) {
         {/* Paypoint */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
-            label="Paypoint"
+            id="paypoint"
             name="paypoint"
+            label="Paypoint"
+            fullWidth
             value={formData.paypoint || ""}
             onChange={handleChange}
           />
@@ -33,10 +42,11 @@ export default function PayrollPensionInfo({ formData, handleChange }) {
         {/* PFA Number */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
+            id="pfa_number"
+            name="pfa_number"
             label="PFA Number"
-            name="pfaNumber"
-            value={formData.pfaNumber || ""}
+            fullWidth
+            value={formData.pfa_number || ""}
             onChange={handleChange}
           />
         </Grid>
@@ -44,10 +54,11 @@ export default function PayrollPensionInfo({ formData, handleChange }) {
         {/* PFA Name */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
+            id="pfa_name"
+            name="pfa_name"
             label="PFA Name"
-            name="pfaName"
-            value={formData.pfaName || ""}
+            fullWidth
+            value={formData.pfa_name || ""}
             onChange={handleChange}
           />
         </Grid>
@@ -55,23 +66,45 @@ export default function PayrollPensionInfo({ formData, handleChange }) {
         {/* PFA Code */}
         <Grid item xs={12} md={6}>
           <TextField
-            fullWidth
+            id="pfa_code"
+            name="pfa_code"
             label="PFA Code"
-            name="pfaCode"
-            value={formData.pfaCode || ""}
+            fullWidth
+            value={formData.pfa_code || ""}
             onChange={handleChange}
           />
         </Grid>
 
-        {/* Salary Structure */}
+        {/* IPPIS Number (kept in form; server may expect it under account) */}
         <Grid item xs={12} md={6}>
           <TextField
+            id="ippis_number"
+            name="ippis_number"
+            label="IPPIS Number"
             fullWidth
-            label="Salary Structure"
-            name="salaryStructure"
-            value={formData.salaryStructure || ""}
+            value={formData.ippis_number || ""}
             onChange={handleChange}
           />
+        </Grid>
+
+        {/* Salary Structure (dropdown - matches Employee model choices) */}
+        <Grid item xs={12} md={6}>
+          <TextField
+            id="salary_structure"
+            name="salary_structure"
+            label="Salary Structure"
+            select
+            fullWidth
+            value={formData.salary_structure || ""}
+            onChange={handleChange}
+          >
+            <MenuItem value="">Select</MenuItem>
+            {salaryOptions.map((o) => (
+              <MenuItem key={o.value} value={o.value}>
+                {o.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </Grid>
       </Grid>
     </Box>

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from "react";
 import {
   Box,
@@ -151,49 +152,114 @@ const EmployeeForm = () => {
     setActiveStep((prev) => prev - 1);
   };
 
-  // 🔹 Submit
+  // 🔹 Submit (JSON payload to StaffCreateSerializer)
   const handleSubmit = async () => {
-    const submissionData = new FormData();
+    // Helper to safely pick values from different possible keys
+    const pick = (...keys) => {
+      for (const k of keys) {
+        if (formData[k] !== undefined && formData[k] !== null && formData[k] !== "") return formData[k];
+      }
+      return "";
+    };
 
-    // Append certificates
-    formData.certificates.forEach((cert, index) => {
-      Object.entries(cert).forEach(([key, value]) => {
-        submissionData.append(`certificates[${index}][${key}]`, value);
-      });
-    });
+    // Build personal object (try several common key names to be resilient)
+    const personal = {
+      first_name: pick("firstname", "f_name", "firstName", "first_name"),
+      last_name: pick("lastname", "l_name", "lastName", "last_name"),
+      state_of_origin: pick("state_of_origin", "state", "stateOfOrigin"),
+      date_of_birth: pick("dob", "date_of_birth"),
+      email: pick("email"),
+      mobile_number: pick("mobileNumber", "mobile_number", "mobile"),
+      home_address: pick("homeAddress", "home_address"),
+      gender: pick("gender"),
+    };
 
-    // Append education
-    Object.keys(formData.education).forEach((level) => {
-      formData.education[level].forEach((edu, i) => {
-        Object.entries(edu).forEach(([key, val]) => {
-          submissionData.append(`education.${level}[${i}].${key}`, val);
+    // Build employee object
+    const employee = {
+      file_number: pick("fileNumber", "file_number"),
+      designation: pick("designation"),
+      employment_type: pick("employmentType", "employment_type"),
+      salary_structure: pick("salaryStructure", "salary_structure"),
+      grade_level: pick("gradeLevel", "grade_level"),
+      step: pick("step"),
+      dofa: pick("dofa"),
+      dolp: pick("dolp"),
+      edor: pick("edor"),
+      status: pick("status"),
+      office_email: pick("officeEmail", "office_email"),
+    };
+
+    // Build department object (at minimum name). The backend DepartmentSerializer expects its fields.
+    const department = {
+      name: pick("department", "unit", "departmentName"),
+    };
+
+    // Build account object (payroll/pension)
+    const account = {
+      account_number: pick("accountNumber", "account_number"),
+      paypoint: pick("paypoint"),
+      pfa_number: pick("pfaNumber", "pfa_number"),
+      pfa_name: pick("pfaName", "pfa_name"),
+      pfa_code: pick("pfaCode", "pfa_code"),
+      ippis_no: pick("ippisNumber", "ippis_number"),
+    };
+
+    // Build educations array from the grouped education object
+    const educations = [];
+    if (formData.education) {
+      Object.keys(formData.education).forEach((level) => {
+        (formData.education[level] || []).forEach((entry) => {
+          // only push if there's at least one non-empty field
+          if (entry && (entry.name || entry.from || entry.to || entry.qualification)) {
+            educations.push({
+              level, // Primary/Secondary/Tertiary — backend can use or ignore
+              institution_name: entry.name || "",
+              start_year: entry.from || "",
+              end_year: entry.to || "",
+              qualification: entry.qualification || "",
+            });
+          }
         });
       });
-    });
+    }
 
-    // Append other top-level fields
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key !== "certificates" && key !== "education") {
-        submissionData.append(key, value);
-      }
-    });
+    // Build professional qualifications array from certificates
+    const qualifications = (formData.certificates || []).map((cert) => ({
+      issuing_body: cert.issuingBody || cert.issuing_body || "",
+      certificate_id: cert.certificateId || cert.certificate_id || "",
+      certificate_name: cert.certificateName || cert.certificate_name || "",
+      issue_date: cert.issueDate || cert.issue_date || "",
+      expiry_date: cert.expiryDate || cert.expiry_date || "",
+      license_number: cert.licenseNumber || cert.license_number || "",
+      // note: certificateFile is handled separately (file upload)
+    })).filter(q => q.issuing_body || q.certificate_id || q.certificate_name || q.issue_date || q.expiry_date || q.license_number); // drop empty
 
-    // Append general files
-    Object.entries(fileData).forEach(([key, file]) => {
-      submissionData.append(key, file);
-    });
+    const payload = {
+      department,
+      personal,
+      employee,
+      account,
+      educations,
+      qualifications,
+    };
+
+    console.log("Employee create payload:", payload);
+
+    const headers = { "Content-Type": "application/json" };
+    // if you have an auth token in localStorage (or elsewhere), include it
+    const token = localStorage.getItem("token") || localStorage.getItem("access_token");
+    if (token) headers.Authorization = `Bearer ${token}`;
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/admin/nom_roll/employee/add/", {
-        method: "POST",
-        body: submissionData,
-      });
+      const response = await axios.post("http://127.0.0.1:8000/nom_roll/create/", payload, { headers });
 
-      if (!response.ok) throw new Error("Failed to submit data");
-
-      const result = await response.json();
+      // if backend returns created employee or some response body
+      console.log("Create response:", response.data);
       alert("Employee registered successfully!");
-      console.log(result);
+
+      // Optionally: you might want to upload files now (photo, certificate files).
+      // I kept file upload separate — because your StaffCreateSerializer currently expects JSON.
+      // You can implement a separate endpoint to accept multipart/form-data for files.
 
       // Reset form
       setActiveStep(0);
@@ -202,9 +268,12 @@ const EmployeeForm = () => {
         education: { Primary: [{}], Secondary: [{}], Tertiary: [{}] },
       });
       setFileData({});
-    } catch (error) {
-      console.error("Submission Error:", error);
-      alert("Submission failed. Try again.");
+    } catch (err) {
+      // axios error object handling
+      console.error("Submission Error:", err.response || err.message || err);
+      // Give user readable message if backend provided one
+      const msg = err.response?.data || err.response?.statusText || err.message || "Submission failed.";
+      alert(`Submission failed. ${JSON.stringify(msg)}`);
     }
   };
 

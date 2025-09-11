@@ -123,7 +123,7 @@ class Employee(models.Model):
     section = models.CharField(max_length=20, choices=SECTION_CHOICES, default='administration')
     office_email = models.EmailField()
     mobile_number = models.ForeignKey(Personal, on_delete=models.CASCADE)
-    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    # user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     isHOD = models.BooleanField(default=False)
     signature =  models.ImageField(
         upload_to='signature/',
@@ -176,7 +176,7 @@ class Employee(models.Model):
                 if avt.height > 500 or avt.width > 500:
                     output_size = (500, 500)
                     avt.thumbnail(output_size)
-                    avt.save(image_path)
+                    avt.save(avatar_path)
             else:
                 pass
 

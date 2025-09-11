@@ -35,7 +35,7 @@ class EmployeeByDigitsDetail(generics.RetrieveAPIView):
         return Response(serializer.data)
     
 class EmployeeProfileAPIView(APIView):
-    permission_classes = [permissions.AllowAny]     # Test purpose; change to IsAuthenticated in production
+    permission_classes = [AllowAny]     # Test purpose; change to IsAuthenticated in production
 
     def get(self, request, digits, format=None):
         # find first employee where file_number contains the digits
