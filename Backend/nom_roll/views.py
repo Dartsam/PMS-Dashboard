@@ -81,7 +81,10 @@ class PersonalViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
 class EmployeeViewset(viewsets.ModelViewSet):
-    queryset = Employee.objects.all()
+    queryset = Employee.objects.all().order_by('-grade_level', 
+                                               '-step', 
+                                               'dolp', 
+                                               'file_number')
     serializer_class = EmployeeSerializer
     permission_classes = [permissions.AllowAny]
 

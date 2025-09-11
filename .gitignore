@@ -5,9 +5,9 @@ env/
 # Ignore Django migrations and pycache
 __pycache__/
 *.pyc
-# migrations
-# db.sqlite3
-Backend_backup
+#migrations
+#db.sqlite3
+#Backend_backup
 
 
 # Ignore IDE/editor settings

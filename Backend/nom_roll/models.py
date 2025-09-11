@@ -87,6 +87,10 @@ class Employee(models.Model):
         ('permanent', 'Permanent'),
         ('temporary', 'Temporary'),
     ]
+    SECTION_CHOICES = EMPLOYEE_TYPE_CHOICES = [
+        ('administration', 'Administration'),
+        ('clinicals', 'Clinical Services'),
+    ]
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     avatar =  models.ImageField(
         upload_to='profile_pic/',
@@ -95,7 +99,7 @@ class Employee(models.Model):
     )
     file_number = models.CharField(max_length=17, unique=True)
     designation = models.CharField(max_length=30)
-    employment_type = models.CharField(max_length=10, 
+    employment_type = models.CharField(max_length=14, 
                         choices=EMPLOYEE_TYPE_CHOICES, 
                         default='permanent'
     )
@@ -116,6 +120,7 @@ class Employee(models.Model):
                               default='active'
     )
     department = models.ForeignKey(Department, on_delete = models.CASCADE)
+    section = models.CharField(max_length=20, choices=SECTION_CHOICES, default='administration')
     office_email = models.EmailField()
     mobile_number = models.ForeignKey(Personal, on_delete=models.CASCADE)
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
