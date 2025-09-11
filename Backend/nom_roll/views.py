@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
 from rest_framework import status
+from django.db.models import Case, When, Value, IntegerField
 # from rest_framework.decorators import action
 from .models import Personal, Employee, Department, TopManagement, EmployeeDocument
 from .serializers import (PersonalSerializer, EmployeeSerializer, 
@@ -55,21 +56,6 @@ class ProfileDetailView(generics.RetrieveAPIView):
         # If you want staff to see their own profile
         return self.request.user
 
-# class EmployeeProfileTemplateView(TemplateView):
-#     template_name = "nom_roll/employee_profile.html"  
-#     permission_required = None  
-
-#     def get_context_data(self, **kwargs):
-#         ctx = super().get_context_data(**kwargs)
-#         digits = kwargs.get("digits")
-#         qs = Employee.objects.filter(file_number__regex=rf"\D*{re.escape(digits)}\D*")
-#         employee = qs.first()
-#         if not employee:
-#             from django.http import Http404
-#             raise Http404("Employee not found")
-#         ctx["profile"] = ProfileSerializer(employee, context={"request": self.request}).data
-#         return ctx
-
 class StaffCreateView(generics.CreateAPIView):
     queryset = Employee.objects.all()
     serializer_class = StaffCreateSerializer
@@ -81,12 +67,21 @@ class PersonalViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
 class EmployeeViewset(viewsets.ModelViewSet):
-    queryset = Employee.objects.all().order_by('-grade_level', 
-                                               '-step', 
-                                               'dolp', 
-                                               'file_number')
+    queryset = Employee.objects.all()  # DRF needs this for basename
     serializer_class = EmployeeSerializer
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        return Employee.objects.annotate(
+            salary_order=Case(
+                When(salary_structure="CONTOPSAL", then=Value(1)),
+                When(salary_structure="CONMESS", then=Value(2)),
+                When(salary_structure="CONHESS", then=Value(3)),
+                default=Value(4),
+                output_field=IntegerField(),
+            )
+        ).order_by("salary_order", "-grade_level", "-step", "dolp", "file_number")
+
 
 class EmployeeDocumentViewset(viewsets.ModelViewSet):
     queryset = EmployeeDocument.objects.all().order_by('-uploaded_at')
@@ -113,4 +108,23 @@ class NominalRollViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return self.queryset.filter(status='active')
+        return (
+            self.queryset
+            .filter(status="active")
+            .annotate(
+                salary_order=Case(
+                    When(salary_structure="CONTOPSAL", then=Value(1)),
+                    When(salary_structure="CONMESS", then=Value(2)),
+                    When(salary_structure="CONHESS", then=Value(3)),
+                    default=Value(4),
+                    output_field=IntegerField(),
+                )
+            )
+            .order_by(
+                "salary_order",   # custom priority
+                "-grade_level",   # descending
+                "-step",          # descending
+                "dolp",           # ascending
+                "file_number"     # ascending
+            )
+        )

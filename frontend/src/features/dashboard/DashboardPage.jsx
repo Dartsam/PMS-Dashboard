@@ -1,86 +1,39 @@
-import { Grid, Card, CardContent, Typography, Box } from '@mui/material';
+import React from "react";
+import { Grid } from "@mui/material";
 
-export default function DashboardPage() {
-  const dummyStats = [
-    { title: 'Staff Count', value: '1,234', change: '+4.2%' },
-    { title: 'Leave Pending', value: '56', change: '-1.3%' },
-    { title: 'Promotions', value: '12', change: '+8.0%' },
-    { title: 'Budget Forecast', value: '$1.2M', change: '+2.5%' },
-  ];
+import StatCard from "./components/StatCard";
+import AdmissionsChart from "./components/charts/AdmissionsChart";
+import GenderChart from "./components/charts/GenderChart";
+import TrendsChart from "./components/charts/TrendsChart";
 
+const Dashboard = () => {
   return (
-    <Box sx={{ p: 3, bgcolor: '#F9FAFB', minHeight: '100vh' }}>
-      <Typography variant="h5" fontWeight="bold" mb={3} sx={{ textAlign: 'left' }}>
-        Overview
-      </Typography>
-
-      <Grid container spacing={3}>
-        {/* First 4 cards */}
-        {dummyStats.map(({ title, value, change }) => (
-          <Grid item xs={12} sm={6} md={6} lg={3} key={title}>
-            <Card
-              sx={{
-                backgroundColor: '#fff',
-                borderRadius: 2,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-              }}
-            >
-              <CardContent>
-                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  {title}
-                </Typography>
-                <Typography variant="h5" fontWeight="bold">
-                  {value}
-                </Typography>
-                <Typography
-                  variant="subtitle2"
-                  color={change.startsWith('+') ? 'success.main' : 'error.main'}
-                >
-                  {change}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-
-        {/* Sessions Card */}
-        <Grid item xs={12} sm={12} md={12} lg={8}>
-          <Card
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: 2,
-              height: 300,
-              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-            }}
-          >
-            <CardContent>
-              <Typography variant="subtitle1" fontWeight="bold">
-                Sessions Last 30 Days
-              </Typography>
-              <Box sx={{ mt: 2, height: '220px', bgcolor: '#E5E7EB', borderRadius: 1 }} />
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Page Views Card */}
-        <Grid item xs={12} sm={12} md={12} lg={4}>
-          <Card
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: 2,
-              height: 300,
-              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-            }}
-          >
-            <CardContent>
-              <Typography variant="subtitle1" fontWeight="bold">
-                Page Views
-              </Typography>
-              <Box sx={{ mt: 2, height: '220px', bgcolor: '#E5E7EB', borderRadius: 1 }} />
-            </CardContent>
-          </Card>
-        </Grid>
+    <Grid container spacing={3} padding={3} columns={12}>
+      {/* Top Cards */}
+      <Grid size={{ xs: 12, sm: 4 }}>
+        <StatCard title="Patients Admitted" value="120" />
       </Grid>
-    </Box>
+      <Grid size={{ xs: 12, sm: 4 }}>
+        <StatCard title="Available Beds" value="35" />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 4 }}>
+        <StatCard title="Doctors On Duty" value="18" />
+      </Grid>
+
+      {/* Middle Charts */}
+      <Grid size={{ xs: 12, md: 6 }}>
+        <AdmissionsChart />
+      </Grid>
+      <Grid size={{ xs: 12, md: 6 }}>
+        <GenderChart />
+      </Grid>
+
+      {/* Bottom Trend */}
+      <Grid size={{ xs: 12 }}>
+        <TrendsChart />
+      </Grid>
+    </Grid>
   );
-}
+};
+
+export default Dashboard;

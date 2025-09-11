@@ -148,6 +148,10 @@ import { useNominalRoll } from "./useNominalRoll"; // relative import
 const columns = [
   { id: "f_name", label: "First Name", minWidth: 120 },
   { id: "l_name", label: "Last Name", minWidth: 120 },
+  { id: "designation", label: "Designation", minWidth: 150 },
+  { id: "salary_structure", label: "Salary Structure", minWidth: 180 },
+  { id: "grade_level", label: "Grade Level", minWidth: 150 },
+  { id: "step", label: "Step", minWidth: 100 },
   { id: "state_of_origin", label: "State of Origin", minWidth: 150 },
   { id: "date_of_birth", label: "Date of Birth", minWidth: 150 },
   { id: "age_at_appointment", label: "Age at Appointment", minWidth: 180 },
@@ -156,12 +160,8 @@ const columns = [
   { id: "ippis_number", label: "IPPIS Number", minWidth: 150 },
   { id: "dofa", label: "Date of First Appointment", minWidth: 200 },
   { id: "unit", label: "Unit", minWidth: 150 },
-  { id: "designation", label: "Designation", minWidth: 150 },
-  { id: "salary_structure", label: "Salary Structure", minWidth: 180 },
   { id: "status", label: "Status", minWidth: 120 },
   { id: "employment_type", label: "Employment Type", minWidth: 180 },
-  { id: "grade_level", label: "Grade Level", minWidth: 150 },
-  { id: "step", label: "Step", minWidth: 100 },
   { id: "dolp", label: "Date of Last Promotion", minWidth: 200 },
   { id: "edor", label: "Expected Date of Retirement", minWidth: 220 },
 ];

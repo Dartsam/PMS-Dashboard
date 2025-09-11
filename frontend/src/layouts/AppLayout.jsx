@@ -56,27 +56,48 @@ export default function AppLayout() {
 
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-    { text: 'Employee', icon: <PeopleIcon />, children: [
-      {
-        text: 'Nominal Roll',
-        path: '/employee/nominalRoll',
-      },
-      {
-        text: 'New Employee',
-        path: '/employee/newEmployee',
-      },
-      {
-        text: 'Archive',
-        path: '/employee/archive',
-      },
-    ], },
-    { text: 'Career Advancement', icon: <RocketIcon />, path: '/careereadvancement' },
+    {
+      text: 'Employee', icon: <PeopleIcon />, children: [
+        {
+          text: 'Nominal Roll',
+          path: '/employee/nominalRoll',
+        },
+        {
+          text: 'New Employee',
+          path: '/employee/newEmployee',
+        },
+        {
+          text: 'Archive',
+          path: '/employee/archive',
+        },
+      ],
+    },
+    {
+      text: 'Career Advancement', icon: <RocketIcon />, children: [
+        {
+          text: 'Educational Qualifications',
+          path: '/employee/nominalRoll',
+        },
+        {
+          text: 'Professional Qualifications',
+          path: '/employee/newEmployee',
+        },
+        {
+          text: 'Promotion Eligibility',
+          path: '/employee/archive',
+        },
+        {
+          text: 'Promotion List',
+          path: '/employee/archive',
+        },
+      ], path: '/careeradvancement'
+    },
     { text: 'Budget', icon: <WalletIcon />, path: '/budget' },
     { text: 'Fiscal', icon: <AccountBalanceIcon />, path: '/fiscal' },
     { text: 'ePMS', icon: <AssignmentIcon />, path: '/epms' },
     { text: 'Leave', icon: <EventNoteIcon />, path: '/leave' },
     { text: 'Profile', icon: <PersonIcon />, path: '/profile' },
-  
+
   ];
 
   return (
@@ -103,11 +124,11 @@ export default function AppLayout() {
 
           {/* App title */}
           <Box
-              component="img"
-              src={Logo}
-              alt="My App Logo"
-              sx={{ height: 32, mr: 1 }}
-            />
+            component="img"
+            src={Logo}
+            alt="My App Logo"
+            sx={{ height: 32, mr: 1 }}
+          />
           <Typography variant="h6" noWrap component="div">
             FNPHY
           </Typography>
@@ -150,7 +171,7 @@ export default function AppLayout() {
           </IconButton>
         </Toolbar>
       </AppBar>
-      
+
       <Drawer
         variant="permanent"
         open={open}
@@ -164,88 +185,88 @@ export default function AppLayout() {
             overflowX: 'hidden',
           },
         }}
-      > 
+      >
         <Toolbar sx={{ justifyContent: open ? 'flex-end' : 'center' }} />
         <List>
-            {menuItems.map((item, index) => {
-              if (item.children) {
-                const isOpen = openSubMenu === item.text;
-                return (
-                  <Box key={index}>
-                    <ListItemButton
-                      onClick={() => handleToggleSubMenu(item.text)}
-                      sx={{
-                        justifyContent: open ? 'initial' : 'center',
-                        px: 2.5,
-                      }}
-                    >
-                      <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', color: '#FFF' }}>
-                        {item.icon}
-                      </ListItemIcon>
-                      {open && (
-                        <>
-                          <ListItemText primary={item.text} />
-                          {isOpen ? <ExpandLess /> : <ExpandMore />}
-                        </>
-                      )}
-                    </ListItemButton>
-
-                    <Collapse in={isOpen} timeout="auto" unmountOnExit>
-                      <List component="div" disablePadding>
-                        {item.children.map((child, cIndex) => (
-                          <ListItemButton
-                            key={cIndex}
-                            component={NavLink}
-                            to={child.path}
-                            sx={{
-                              pl: open ? 8 : 2,
-                              '&.active': {
-                                backgroundColor: theme.palette.primary.dark,
-                                color: '#fff',
-                              },
-                            }}
-                          >
-                            <ListItemText primary={child.text} />
-                          </ListItemButton>
-                        ))}
-                      </List>
-                    </Collapse>
-                  </Box>
-                );
-              }
-
+          {menuItems.map((item, index) => {
+            if (item.children) {
+              const isOpen = openSubMenu === item.text;
               return (
-                <ListItemButton
-                  key={index}
-                  component={NavLink}
-                  to={item.path}
-                  sx={{
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
-                    '&.active': {
-                      backgroundColor: theme.palette.primary.dark,
-                      color: '#fff',
-                    },
-                  }}
-                >
-                  <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', color: '#FFF' }}>
-                    {item.icon}
-                  </ListItemIcon>
-                  {open && <ListItemText primary={item.text} />}
-                </ListItemButton>
+                <Box key={index}>
+                  <ListItemButton
+                    onClick={() => handleToggleSubMenu(item.text)}
+                    sx={{
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', color: '#FFF' }}>
+                      {item.icon}
+                    </ListItemIcon>
+                    {open && (
+                      <>
+                        <ListItemText primary={item.text} />
+                        {isOpen ? <ExpandLess /> : <ExpandMore />}
+                      </>
+                    )}
+                  </ListItemButton>
+
+                  <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {item.children.map((child, cIndex) => (
+                        <ListItemButton
+                          key={cIndex}
+                          component={NavLink}
+                          to={child.path}
+                          sx={{
+                            pl: open ? 8 : 2,
+                            '&.active': {
+                              backgroundColor: theme.palette.primary.dark,
+                              color: '#fff',
+                            },
+                          }}
+                        >
+                          <ListItemText primary={child.text} />
+                        </ListItemButton>
+                      ))}
+                    </List>
+                  </Collapse>
+                </Box>
               );
-            })}
-          </List>
+            }
+
+            return (
+              <ListItemButton
+                key={index}
+                component={NavLink}
+                to={item.path}
+                sx={{
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                  '&.active': {
+                    backgroundColor: theme.palette.primary.dark,
+                    color: '#fff',
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', color: '#FFF' }}>
+                  {item.icon}
+                </ListItemIcon>
+                {open && <ListItemText primary={item.text} />}
+              </ListItemButton>
+            );
+          })}
+        </List>
       </Drawer>
 
       <Box
-          component="main"
-           sx={{
-            flexGrow: 1,
-            bgcolor: 'background.default',
-            paddingTop: '64px',
-            width: '100%',
-            display: 'grid', marginLeft: '0', marginRight: '0',
+        component="main"
+        sx={{
+          flexGrow: 1,
+          bgcolor: 'background.default',
+          paddingTop: '64px',
+          width: '100%',
+          display: 'grid', marginLeft: '0', marginRight: '0',
           //   flexDirection: 'column',
           //   p: 0,
           //   ml: open ? `${drawerWidth}px` : '56px', // aligns with drawer state
@@ -255,11 +276,11 @@ export default function AppLayout() {
           //       easing: theme.transitions.easing.sharp,
           //       duration: theme.transitions.duration.leavingScreen,
           //     }),
-           }} lg={{width: '100%', marginLeft: '0', marginRight: '0',}}
-        >
-          {/* page content */}
-          <Outlet />
-        </Box>
+        }} lg={{ width: '100%', marginLeft: '0', marginRight: '0', }}
+      >
+        {/* page content */}
+        <Outlet />
+      </Box>
     </Box>
   );
 }

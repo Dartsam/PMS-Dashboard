@@ -87,7 +87,7 @@ class Employee(models.Model):
         ('permanent', 'Permanent'),
         ('temporary', 'Temporary'),
     ]
-    SECTION_CHOICES = EMPLOYEE_TYPE_CHOICES = [
+    SECTION_CHOICES = [
         ('administration', 'Administration'),
         ('clinicals', 'Clinical Services'),
     ]
@@ -134,6 +134,9 @@ class Employee(models.Model):
     def __str__(self):
         return (f"{self.file_number} "
         )
+    
+    # class Meta:
+    #     ordering = ['-grade_level', '-step', 'dolp', 'file_number']
     
     @property
     def digits(self):
@@ -196,6 +199,7 @@ class EmployeeDocument(models.Model):
                       ('professional', 'Professional'),
                       ('other', 'Other'),
                       ('employment', 'Employment Letter'),
+                      ('assumption', 'Assumption Letter'),
                       ('promotion', 'Promotion'),
                       ('query', 'Query'),
                       ('leave_approval', 'Leave approval'),

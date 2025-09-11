@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Personal, Employee, Department, TopManagement, EmployeeDocument
+from django.db.models import Case, When, Value, IntegerField
 from django_admin_flexlist import FlexListAdmin
 # Register your models here.
 
@@ -22,8 +23,21 @@ class EmployeeAdmin(FlexListAdmin):
                     'mobile_number'
                     ]
     search_fields = ['file_number__first_name', 'designation', 'office_email']
-    list_filter = ['status', 'salary_structure', 'department']
+    list_filter = ['salary_structure', 'grade_level', 'step', 'status', 'department',]
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.annotate(
+            salary_order=Case(
+                When(salary_structure='CONTOPSAL', then=Value(1)),
+                When(salary_structure='CONMESS', then=Value(2)),
+                When(salary_structure='CONHESS', then=Value(3)),
+                default=Value(99),
+                output_field=IntegerField(),
+            )
+        ).order_by('salary_order', '-grade_level', '-step', 'dolp', 'file_number')
+    # ordering = ['-grade_level', '-step', 'dolp', 'file_number']
 # EmployeeAdmin registered with the admin site
+
 
 # Register the Department model with the admin site
 @admin.register(Department)
